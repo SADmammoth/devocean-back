@@ -50,7 +50,7 @@ module.exports.models = {
    *                                                                          *
    ***************************************************************************/
 
-  // migrate: 'alter',
+  migrate: "safe",
 
   /***************************************************************************
    *                                                                          *
@@ -66,17 +66,6 @@ module.exports.models = {
 
   attributes: {
     id: { type: "string", columnName: "_id" },
-    //--------------------------------------------------------------------------
-    //  /\   Using MongoDB?
-    //  ||   Replace `id` above with this instead:
-    //
-    // ```
-    // id: { type: 'string', columnName: '_id' },
-    // ```
-    //
-    // Plus, don't forget to configure MongoDB as your default datastore:
-    // https://sailsjs.com/docs/tutorials/using-mongo-db
-    //--------------------------------------------------------------------------
   },
 
   /******************************************************************************
