@@ -44,8 +44,8 @@ module.exports = {
      *                                                                          *
      ***************************************************************************/
     default: {
-      // adapter: 'sails-mysql',
-      // url: 'mysql://user:password@host:port/database',
+      adapter: 'sails-mongo',
+      url: process.env.DB_PATH,
       //--------------------------------------------------------------------------
       //  /\   To avoid checking it in to version control, you might opt to set
       //  ||   sensitive credentials like `url` using an environment variable.
@@ -81,8 +81,10 @@ module.exports = {
      * https://sailsjs.com/docs/concepts/models-and-orm/model-settings#?migrate *
      *                                                                          *
      ***************************************************************************/
-    migrate: "safe",
-
+    migrate: 'safe',
+    attributes: {
+      id: { type: 'string', columnName: '_id' },
+    },
     /***************************************************************************
      *                                                                          *
      * If, in production, this app has access to physical-layer CASCADE         *
@@ -133,9 +135,10 @@ module.exports = {
      *                                                                          *
      ***************************************************************************/
     cors: {
-      // allowOrigins: [
-      //   'https://example.com',
-      // ]
+      allowOrigins: [
+        'https://devocean-back.herokuapp.com',
+        'https://devocean-front.herokuapp.com',
+      ],
     },
   },
 
@@ -225,10 +228,10 @@ module.exports = {
      * > Be sure to use the right protocol!  ("http://" vs. "https://")         *
      *                                                                          *
      ***************************************************************************/
-    // onlyAllowOrigins: [
-    //   'https://example.com',
-    //   'https://staging.example.com',
-    // ],
+    onlyAllowOrigins: [
+      'https://devocean-back.herokuapp.com',
+      'https://devocean-front.herokuapp.com',
+    ],
     /***************************************************************************
      *                                                                          *
      * If you are deploying a cluster of multiple servers and/or processes,     *
@@ -262,7 +265,7 @@ module.exports = {
    *                                                                         *
    ***************************************************************************/
   log: {
-    level: "debug",
+    level: 'debug',
   },
 
   http: {
@@ -292,7 +295,7 @@ module.exports = {
      * (https://sailsjs.com/config/http)                                        *
      *                                                                          *
      ***************************************************************************/
-    // trustProxy: true,
+    trustProxy: true,
   },
 
   /**************************************************************************
@@ -334,8 +337,7 @@ module.exports = {
    *                                                                         *
    ***************************************************************************/
   custom: {
-    baseUrl: "https://example.com",
-    internalEmailAddress: "support@example.com",
+    baseUrl: 'https://devocean-back.herokuapp.com',
 
     // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
     // stripeSecret: 'sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm',
