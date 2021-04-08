@@ -7,9 +7,6 @@ module.exports = {
       type: 'ref',
       columnType: 'datetime',
       required: true,
-      custom: (val) => {
-        return _.isDate(val);
-      },
     },
     author: { type: 'string', required: true },
   },
