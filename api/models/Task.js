@@ -26,7 +26,7 @@ module.exports = {
     },
     tag: { model: 'tag', required: true },
     status: { model: 'status', required: true },
-    assignee: { collection: 'assignee' },
+    assignee: { collection: 'assignee', via: 'task' },
     description: {
       type: 'string',
     },

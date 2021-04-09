@@ -8,5 +8,6 @@ module.exports = {
     lastName: { type: 'string', required: true },
     referAs: { type: 'string', isIn: referAs, required: true },
     createdNotifications: { collection: 'notification', via: 'author' },
+    assignedTasks: { collection: 'assignee', via: 'teammate' },
   },
 };
