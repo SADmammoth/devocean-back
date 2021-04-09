@@ -5,9 +5,10 @@ module.exports = {
     title: { type: 'string', required: true },
     time: {
       type: 'ref',
-      columnType: 'datetime',
+      columnType: 'date',
       required: true,
     },
-    author: { type: 'string', required: true },
+    author: { model: 'teammates' },
+    fullText: { type: 'string' },
   },
 };

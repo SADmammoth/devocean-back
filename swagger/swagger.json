@@ -2,17 +2,35 @@
   "openapi": "3.0.0",
   "info": {
     "title": "DEVocean REST API",
-    "description": "React API documentation of DEVocean project"
+    "description": "React API documentation of DEVocean project",
+    "termsOfService": "http://example.com/terms",
+    "contact": {
+      "name": "Theophilus Omoregbee",
+      "url": "http://github.com/theo4u",
+      "email": "theo4u@ymail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
   },
   "servers": [
     {
       "url": "http://localhost:1337/"
     }
   ],
+  "externalDocs": {
+    "url": "https://theoomoregbee.github.io/"
+  },
   "tags": [
     {
       "name": "Notifications",
       "description": "Sails blueprint actions for the **Notifications** model"
+    },
+    {
+      "name": "Teammates",
+      "description": "Sails blueprint actions for the **Teammates** model"
     },
     {
       "name": "Nav items"
@@ -27,7 +45,10 @@
             "$ref": "#/components/schemas/notifications-without-required-constraint"
           },
           {
-            "required": ["title", "time", "author"]
+            "required": [
+              "title",
+              "time"
+            ]
           }
         ]
       },
@@ -44,10 +65,59 @@
           },
           "time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "author": {
+            "description": "JSON dictionary representing the **teammates** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammates"
+              }
+            ]
+          },
+          "fullText": {
             "type": "string"
+          }
+        }
+      },
+      "teammates": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/teammates-without-required-constraint"
+          },
+          {
+            "required": [
+              "name",
+              "lastName",
+              "referAs"
+            ]
+          }
+        ]
+      },
+      "teammates-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Teammates**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "referAs": {
+            "type": "string"
+          },
+          "createdNotifications": {
+            "description": "Array of **notifications**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/notifications"
+            }
           }
         }
       }
@@ -62,6 +132,16 @@
           "uniqueItems": true
         },
         "description": "The desired **Notifications** record's primary key value"
+      },
+      "ModelPKParam-teammates": {
+        "in": "path",
+        "name": "_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "description": "The desired **Teammates** record's primary key value"
       },
       "AttributeFilterParam": {
         "in": "query",
@@ -196,7 +276,9 @@
     "/nav-items": {
       "get": {
         "summary": "Nav items",
-        "tags": ["Nav items"],
+        "tags": [
+          "Nav items"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -212,7 +294,9 @@
       },
       "put": {
         "summary": "Nav items",
-        "tags": ["Nav items"],
+        "tags": [
+          "Nav items"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -228,7 +312,9 @@
       },
       "post": {
         "summary": "Nav items",
-        "tags": ["Nav items"],
+        "tags": [
+          "Nav items"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -244,7 +330,9 @@
       },
       "delete": {
         "summary": "Nav items",
-        "tags": ["Nav items"],
+        "tags": [
+          "Nav items"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -260,7 +348,9 @@
       },
       "patch": {
         "summary": "Nav items",
-        "tags": ["Nav items"],
+        "tags": [
+          "Nav items"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -283,7 +373,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/AttributeFilterParam"
@@ -306,7 +398,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -316,9 +408,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,author"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -352,7 +454,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -363,7 +467,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -373,9 +477,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,author"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -406,7 +520,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "in": "query",
@@ -429,7 +545,7 @@
             "name": "time",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date"
             },
             "required": true
           },
@@ -437,9 +553,21 @@
             "in": "query",
             "name": "author",
             "schema": {
-              "type": "string"
+              "description": "JSON dictionary representing the **teammates** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              ]
             },
-            "required": true
+            "description": "JSON dictionary representing the **teammates** instance or FK when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "fullText",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -473,7 +601,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -498,12 +628,25 @@
             "name": "time",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date"
             }
           },
           {
             "in": "query",
             "name": "author",
+            "schema": {
+              "description": "JSON dictionary representing the **teammates** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **teammates** instance or FK when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "fullText",
             "schema": {
               "type": "string"
             }
@@ -540,7 +683,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -566,15 +711,17 @@
         }
       }
     },
-    "/notifications": {
+    "/teammates/find": {
       "get": {
-        "summary": "List Notifications (find where)",
-        "description": "Find a list of **Notifications** records that match the specified criteria.",
+        "summary": "List Teammates (find where) *",
+        "description": "Find a list of **Teammates** records that match the specified criteria.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
         "externalDocs": {
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Teammates"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/AttributeFilterParam"
@@ -597,7 +744,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,name,lastName,referAs,createdNotifications"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -607,9 +754,549 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,name,lastName,referAs,createdNotifications"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,createdNotifications"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **Teammates** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/teammates"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/find/{_id}": {
+      "get": {
+        "summary": "Get Teammates (find one) *",
+        "description": "Look up the **Teammates** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,createdNotifications"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/create": {
+      "get": {
+        "summary": "Create Teammates *",
+        "description": "Create a new **Teammates** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "lastName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "referAs",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "createdNotifications",
+            "schema": {
+              "description": "Array of **notifications**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/notifications"
+              }
+            },
+            "description": "Array of **notifications**'s or array of FK's when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **Teammates** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/update/{_id}": {
+      "get": {
+        "summary": "Update Teammates *",
+        "description": "Update an existing **Teammates** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lastName",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "referAs",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "createdNotifications",
+            "schema": {
+              "description": "Array of **notifications**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/notifications"
+              }
+            },
+            "description": "Array of **notifications**'s or array of FK's when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/destroy/{_id}": {
+      "get": {
+        "summary": "Delete Teammates (destroy) *",
+        "description": "Delete the **Teammates** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **Teammates** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{_id}/{association}/add/{childid}": {
+      "get": {
+        "summary": "Add to for Teammates *",
+        "description": "Add a foreign record to one of this **Teammates** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Teammates** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{_id}/{association}/replace": {
+      "get": {
+        "summary": "Replace for Teammates *",
+        "description": "Replace all of the child records in one of this **Teammates** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "query",
+            "name": "createdNotifications",
+            "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                "uniqueItems": true
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{_id}/{association}/remove/{childid}": {
+      "get": {
+        "summary": "Remove from for Teammates *",
+        "description": "Remove a foreign record from one of this **Teammates** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Teammates** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "summary": "List Notifications (find where)",
+        "description": "Find a list of **Notifications** records that match the specified criteria.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,title,time,author,fullText"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,title,time,author,fullText"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,author"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -641,7 +1328,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -685,7 +1374,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -696,7 +1387,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -706,9 +1397,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,title,time,author"
+              "example": "id,title,time,author,fullText"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,author"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -737,7 +1438,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -783,7 +1486,9 @@
           "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
           "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
         },
-        "tags": ["Notifications"],
+        "tags": [
+          "Notifications"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/ModelPKParam-notifications"
@@ -802,6 +1507,643 @@
           },
           "404": {
             "description": "Cannot destroy, **Notifications** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/notifications/{_id}/{association}": {
+      "get": {
+        "summary": "Populate association for Notifications",
+        "description": "Populate and return foreign record(s) for the given association of this **Notifications** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-notifications"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "author"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,title,time,author,fullText"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,title,time,author,fullText"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/teammates"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Notifications** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates": {
+      "get": {
+        "summary": "List Teammates (find where)",
+        "description": "Find a list of **Teammates** records that match the specified criteria.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,createdNotifications"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **Teammates** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/teammates"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Teammates",
+        "description": "Create a new **Teammates** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **Teammates** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the Teammates instance to create.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teammates"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teammates/{_id}": {
+      "get": {
+        "summary": "Get Teammates (find one)",
+        "description": "Look up the **Teammates** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,createdNotifications"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Teammates",
+        "description": "Update an existing **Teammates** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the Teammates instance to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teammates-without-required-constraint"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Teammates (destroy)",
+        "description": "Delete the **Teammates** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **Teammates** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{_id}/{association}/{childid}": {
+      "put": {
+        "summary": "Add to for Teammates",
+        "description": "Add a foreign record to one of this **Teammates** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Teammates** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from for Teammates",
+        "description": "Remove a foreign record from one of this **Teammates** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Teammates** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{_id}/{association}": {
+      "put": {
+        "summary": "Replace for Teammates",
+        "description": "Replace all of the child records in one of this **Teammates** record's associations.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Teammates** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Teammates** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "**Teammates** record's foreign key values to use as the replacement for this collection (**createdNotifications** association)",
+                      "uniqueItems": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Populate association for Teammates",
+        "description": "Populate and return foreign record(s) for the given association of this **Teammates** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Teammates"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-teammates"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdNotifications"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,lastName,referAs,createdNotifications"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/notifications"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Teammates** record with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"

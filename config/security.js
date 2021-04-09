@@ -28,8 +28,8 @@ module.exports.security = {
    ***************************************************************************/
 
   cors: {
-    allRoutes: false,
-    allowOrigins: "*",
+    allRoutes: true,
+    allowOrigins: '*',
     allowCredentials: false,
   },
 
@@ -47,5 +47,5 @@ module.exports.security = {
    *                                                                           *
    ****************************************************************************/
 
-  // csrf: false
+  csrf: false,
 };
