@@ -1,0 +1,12 @@
+const _ = require('@sailshq/lodash');
+
+const referAs = require('../enums/referAs');
+
+module.exports = {
+  attributes: {
+    name: { type: 'string', required: true },
+    lastName: { type: 'string', required: true },
+    referAs: { type: 'string', isIn: referAs, required: true },
+    createdNotifications: { collection: 'notification', via: 'author' },
+  },
+};

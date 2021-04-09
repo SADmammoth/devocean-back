@@ -1,14 +1,14 @@
 const _ = require('@sailshq/lodash');
+const Date = require('../types/Date');
 
 module.exports = {
   attributes: {
     title: { type: 'string', required: true },
     time: {
-      type: 'ref',
-      columnType: 'date',
+      ...Date,
       required: true,
     },
-    author: { model: 'teammates' },
+    author: { model: 'teammate' },
     fullText: { type: 'string' },
   },
 };
