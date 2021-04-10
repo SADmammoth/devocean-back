@@ -45,6 +45,10 @@
       "description": "Sails blueprint actions for the **Task** model"
     },
     {
+      "name": "TaskCollection",
+      "description": "Sails blueprint actions for the **TaskCollection** model"
+    },
+    {
       "name": "Teammate",
       "description": "Sails blueprint actions for the **Teammate** model"
     },
@@ -192,6 +196,20 @@
           },
           "color": {
             "type": "string"
+          },
+          "tasks": {
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/task"
+            }
+          },
+          "list": {
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/taskcollection"
+            }
           }
         }
       },
@@ -206,7 +224,6 @@
               "title",
               "priority",
               "timeInStatus",
-              "tag",
               "status"
             ]
           }
@@ -270,6 +287,55 @@
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "taskcollection": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/taskcollection-without-required-constraint"
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "taskcollection-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **TaskCollection**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "children": {
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/taskcollection"
+            }
+          },
+          "parent": {
+            "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            ]
+          },
+          "tag": {
+            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/tag"
+              }
+            ]
           }
         }
       },
@@ -376,6 +442,16 @@
           "uniqueItems": true
         },
         "description": "The desired **Task** record's primary key value"
+      },
+      "ModelPKParam-taskcollection": {
+        "in": "path",
+        "name": "_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "description": "The desired **TaskCollection** record's primary key value"
       },
       "ModelPKParam-teammate": {
         "in": "path",
@@ -1601,7 +1677,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -1611,9 +1687,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks,list"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -1660,7 +1746,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -1670,9 +1756,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks,list"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -1729,6 +1825,30 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "schema": {
+              "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/task"
+              }
+            },
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "list",
+            "schema": {
+              "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            },
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -1790,6 +1910,30 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "schema": {
+              "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/task"
+              }
+            },
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "list",
+            "schema": {
+              "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            },
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -1844,6 +1988,219 @@
           },
           "404": {
             "description": "Cannot destroy, **Tag** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tag/{_id}/{association}/add/{childid}": {
+      "get": {
+        "summary": "Add to for Tag *",
+        "description": "Add a foreign record to one of this **Tag** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                },
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Tag** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tag/{_id}/{association}/replace": {
+      "get": {
+        "summary": "Replace for Tag *",
+        "description": "Replace all of the child records in one of this **Tag** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                "uniqueItems": true
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "list",
+            "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                "uniqueItems": true
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Tag** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tag/{_id}/{association}/remove/{childid}": {
+      "get": {
+        "summary": "Remove from for Tag *",
+        "description": "Remove a foreign record from one of this **Tag** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                },
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Tag** record OR **FK record** with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -2077,8 +2434,7 @@
                 }
               ]
             },
-            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated",
-            "required": true
+            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated"
           },
           {
             "in": "query",
@@ -2490,6 +2846,558 @@
           },
           "404": {
             "description": "Cannot perform remove from, **Task** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/find": {
+      "get": {
+        "summary": "List TaskCollection (find where) *",
+        "description": "Find a list of **TaskCollection** records that match the specified criteria.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,children,parent,tag"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **TaskCollection** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/taskcollection"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/find/{_id}": {
+      "get": {
+        "summary": "Get TaskCollection (find one) *",
+        "description": "Look up the **TaskCollection** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,children,parent,tag"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/create": {
+      "get": {
+        "summary": "Create TaskCollection *",
+        "description": "Create a new **TaskCollection** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "children",
+            "schema": {
+              "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            },
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "parent",
+            "schema": {
+              "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/tag"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **TaskCollection** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/update/{_id}": {
+      "get": {
+        "summary": "Update TaskCollection *",
+        "description": "Update an existing **TaskCollection** record.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "uniqueItems": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "children",
+            "schema": {
+              "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            },
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "parent",
+            "schema": {
+              "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated"
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/tag"
+                }
+              ]
+            },
+            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/destroy/{_id}": {
+      "get": {
+        "summary": "Delete TaskCollection (destroy) *",
+        "description": "Delete the **TaskCollection** record with the specified ID.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **TaskCollection** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}/{association}/add/{childid}": {
+      "get": {
+        "summary": "Add to for TaskCollection *",
+        "description": "Add a foreign record to one of this **TaskCollection** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **TaskCollection** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}/{association}/replace": {
+      "get": {
+        "summary": "Replace for TaskCollection *",
+        "description": "Replace all of the child records in one of this **TaskCollection** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "query",
+            "name": "children",
+            "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                "uniqueItems": true
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}/{association}/remove/{childid}": {
+      "get": {
+        "summary": "Remove from for TaskCollection *",
+        "description": "Remove a foreign record from one of this **TaskCollection** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **TaskCollection** record OR **FK record** with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -4095,7 +5003,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -4105,9 +5013,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks,list"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -4198,7 +5116,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -4208,9 +5126,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name,color"
+              "example": "id,name,color,tasks,list"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks,list"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -4308,6 +5236,305 @@
           },
           "404": {
             "description": "Cannot destroy, **Tag** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tag/{_id}/{association}/{childid}": {
+      "put": {
+        "summary": "Add to for Tag",
+        "description": "Add a foreign record to one of this **Tag** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                },
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Tag** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from for Tag",
+        "description": "Remove a foreign record from one of this **Tag** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                },
+                {
+                  "type": "string",
+                  "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Tag** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tag/{_id}/{association}": {
+      "put": {
+        "summary": "Replace for Tag",
+        "description": "Replace all of the child records in one of this **Tag** record's associations.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Tag** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tag"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Tag** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "**Tag** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                      "uniqueItems": true
+                    },
+                    {
+                      "type": "string",
+                      "description": "**Tag** record's foreign key values to use as the replacement for this collection (**list** association)",
+                      "uniqueItems": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Populate association for Tag",
+        "description": "Populate and return foreign record(s) for the given association of this **Tag** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Tag"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-tag"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks",
+                "list"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,color,tasks,list"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,color,tasks,list"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/task"
+                      },
+                      {
+                        "$ref": "#/components/schemas/taskcollection"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Tag** record with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -4866,6 +6093,561 @@
           },
           "404": {
             "description": "Cannot populate, **Task** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection": {
+      "get": {
+        "summary": "List TaskCollection (find where)",
+        "description": "Find a list of **TaskCollection** records that match the specified criteria.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-where"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AttributeFilterParam"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,children,parent,tag"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a paged list of **TaskCollection** records that match the specified criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/taskcollection"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create TaskCollection",
+        "description": "Create a new **TaskCollection** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/create",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/create"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the newly created **TaskCollection** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the TaskCollection instance to create.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}": {
+      "get": {
+        "summary": "Get TaskCollection (find one)",
+        "description": "Look up the **TaskCollection** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/find-one",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/find-one"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,children,parent,tag"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a single **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response denoting **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update TaskCollection",
+        "description": "Update an existing **TaskCollection** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/update",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/update"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation errors; details in JSON response"
+          },
+          "404": {
+            "description": "Cannot update, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "JSON dictionary representing the TaskCollection instance to update.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/taskcollection-without-required-constraint"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete TaskCollection (destroy)",
+        "description": "Delete the **TaskCollection** record with the specified ID.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/destroy",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/destroy"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with a JSON dictionary representing the destroyed **TaskCollection** instance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot destroy, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}/{association}/{childid}": {
+      "put": {
+        "summary": "Add to for TaskCollection",
+        "description": "Add a foreign record to one of this **TaskCollection** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **TaskCollection** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from for TaskCollection",
+        "description": "Remove a foreign record from one of this **TaskCollection** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **TaskCollection** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/taskcollection/{_id}/{association}": {
+      "put": {
+        "summary": "Replace for TaskCollection",
+        "description": "Replace all of the child records in one of this **TaskCollection** record's associations.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children"
+              ]
+            },
+            "description": "The name of the association"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **TaskCollection** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **TaskCollection** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "**TaskCollection** record's foreign key values to use as the replacement for this collection (**children** association)",
+                      "uniqueItems": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Populate association for TaskCollection",
+        "description": "Populate and return foreign record(s) for the given association of this **TaskCollection** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "TaskCollection"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-taskcollection"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "children",
+                "parent",
+                "tag"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,children,parent,tag"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/taskcollection"
+                      },
+                      {
+                        "$ref": "#/components/schemas/tag"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **TaskCollection** record with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
