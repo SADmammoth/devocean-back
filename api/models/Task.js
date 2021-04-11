@@ -1,7 +1,7 @@
 const _ = require('@sailshq/lodash');
 const Duration = require('../types/Duration');
 const DynamicDuration = require('../types/DynamicDuration');
-const priority = require('../enums/priority');
+const priority = require('../types/enums/priority');
 
 module.exports = {
   attributes: {

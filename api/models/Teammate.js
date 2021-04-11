@@ -1,6 +1,6 @@
 const _ = require('@sailshq/lodash');
 
-const referAs = require('../enums/referAs');
+const referAs = require('../types/enums/referAs');
 
 module.exports = {
   attributes: {
