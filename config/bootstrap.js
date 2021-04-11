@@ -28,9 +28,23 @@ module.exports.bootstrap = async function () {
     ]);
   }
 
+  let rootTag;
   if ((await Tag.count()) === 0) {
-    await Tag.create({
+    rootTag = await Tag.create({
       name: 'Root',
+    }).fetch();
+  }
+
+  if ((await TaskCollection.count()) === 0) {
+    const rootFolder = await TaskCollection.create({
+      name: 'Root folder',
+      children: [],
+    }).fetch();
+    await TaskCollection.create({
+      name: 'Root list',
+      tag: rootTag.id,
+      tasks: [],
+      parent: rootFolder.id,
     });
   }
 };

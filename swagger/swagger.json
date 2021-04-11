@@ -556,6 +556,9 @@
           "200": {
             "description": "The requested resource"
           },
+          "400": {
+            "description": "Bad request"
+          },
           "404": {
             "description": "Resource not found"
           },
@@ -574,7 +577,13 @@
                   },
                   "children": {},
                   "tasks": {},
-                  "tag": {}
+                  "tag": {},
+                  "listId": {
+                    "type": "string"
+                  },
+                  "parent": {
+                    "type": "string"
+                  }
                 }
               }
             }

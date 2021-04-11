@@ -4,18 +4,12 @@ module.exports = {
     children: {
       collection: 'taskcollection',
       via: 'parent',
-      custom: function () {
-        return !this.tag;
-      },
     },
     parent: {
       model: 'taskcollection',
     },
     tag: {
       model: 'tag',
-      custom: function () {
-        return !this.children || !this.children.length;
-      },
     },
   },
 

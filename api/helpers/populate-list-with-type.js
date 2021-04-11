@@ -2,7 +2,7 @@ module.exports = {
   friendlyName: 'Populate list with type',
 
   inputs: {
-    list: { type: 'ref' },
+    list: { type: 'ref', required: true },
   },
 
   exits: {
@@ -12,10 +12,7 @@ module.exports = {
   },
 
   fn: async function ({ list }) {
-    let type = 'unknown';
-    if (list.children && list.children.length) {
-      type = 'folder';
-    }
+    let type = 'folder';
     if (list.tag) {
       type = 'list';
     }

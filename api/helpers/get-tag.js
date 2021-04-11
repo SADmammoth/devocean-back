@@ -5,7 +5,7 @@ module.exports = {
 
   inputs: {
     tagInput: {
-      type: 'json',
+      type: 'ref',
       description: 'Tag id or tag object',
       required: true,
     },
@@ -25,6 +25,8 @@ module.exports = {
       tag = await Tag.updateOne({ id: tagInput }, { tasks }).fetch();
     } else if (tagInput.color && tagInput.name) {
       tag = await Tag.create({ ...tagInput, tasks }).fetch();
+    } else {
+      return null;
     }
 
     return tag;

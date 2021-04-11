@@ -4,8 +4,8 @@ module.exports = {
   description: 'Get tasks of list through tag',
 
   inputs: {
-    listId: {
-      type: 'string',
+    list: {
+      type: 'ref',
       required: true,
     },
   },
@@ -16,11 +16,9 @@ module.exports = {
     },
   },
 
-  fn: async function ({ listId }) {
-    const list = await TaskCollection.findOne({ id: listId });
-
+  fn: async function ({ list }) {
     let tasks;
-    if (list && list.tag) {
+    if (list.tag) {
       tasks = await sails.helpers.getTasksOfTag(list.tag);
     }
 
