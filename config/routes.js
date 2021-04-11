@@ -21,12 +21,9 @@ module.exports.routes = {
   'get /swagger.json': (_, res) => {
     const swaggerJson = require('../swagger/swagger.json');
     if (!swaggerJson) {
-      res
-        .status(404)
-        .set('content-type', 'application/json')
-        .send({
-          message: 'Cannot find swagger.json, has the server generated it?',
-        });
+      res.status(404).set('content-type', 'application/json').send({
+        message: 'Cannot find swagger.json, has the server generated it?',
+      });
     }
     return res
       .status(200)
@@ -34,7 +31,50 @@ module.exports.routes = {
       .send(swaggerJson);
   },
 
-  '/': { view: "swagger-ui" },
+  'get /folders': {
+    action: 'folders/index',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/taskcollection' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /folders/:id': {
+    action: 'folders/id',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/taskcollection' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /folders': {
+    action: 'folders/post',
+  },
+
+  'patch /folders/:id': {
+    action: 'folders/patch',
+  },
+
+  '/': { view: 'swagger-ui' },
 
   /***************************************************************************
    *                                                                          *

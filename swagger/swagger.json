@@ -53,7 +53,7 @@
       "description": "Sails blueprint actions for the **Teammate** model"
     },
     {
-      "name": "Nav items"
+      "name": "Folder"
     }
   ],
   "components": {
@@ -192,7 +192,8 @@
             "uniqueItems": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "uniqueItems": true
           },
           "color": {
             "type": "string"
@@ -238,7 +239,8 @@
             "uniqueItems": true
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "uniqueItems": true
           },
           "priority": {
             "type": "string",
@@ -312,7 +314,8 @@
             "uniqueItems": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "uniqueItems": true
           },
           "children": {
             "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
@@ -511,30 +514,27 @@
     }
   },
   "paths": {
-    "/security/grant-csrf-token": {
+    "/folders": {
       "get": {
-        "summary": "/security/grant-csrf-token",
-        "tags": [],
+        "summary": "Folder",
+        "description": "Get collection of task folders and lists",
+        "tags": [
+          "Folder"
+        ],
         "parameters": [],
         "responses": {
           "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "put": {
-        "summary": "/security/grant-csrf-token",
-        "tags": [],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/taskcollection"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Resource not found"
@@ -545,8 +545,11 @@
         }
       },
       "post": {
-        "summary": "/security/grant-csrf-token",
-        "tags": [],
+        "summary": "Folder",
+        "description": "Post folder",
+        "tags": [
+          "Folder"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -558,105 +561,54 @@
           "500": {
             "description": "Internal server error"
           }
-        }
-      },
-      "delete": {
-        "summary": "/security/grant-csrf-token",
-        "tags": [],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "patch": {
-        "summary": "/security/grant-csrf-token",
-        "tags": [],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "children": {},
+                  "tasks": {},
+                  "tag": {}
+                }
+              }
+            }
           }
         }
       }
     },
-    "/nav-items": {
+    "/folders/{id}": {
       "get": {
-        "summary": "Nav items",
+        "summary": "Folder",
+        "description": "Get task folder or list",
         "tags": [
-          "Nav items"
+          "Folder"
         ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "List id"
           }
-        }
-      },
-      "put": {
-        "summary": "Nav items",
-        "tags": [
-          "Nav items"
         ],
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Nav items",
-        "tags": [
-          "Nav items"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Nav items",
-        "tags": [
-          "Nav items"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The requested resource"
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
           },
           "404": {
             "description": "Resource not found"
@@ -667,11 +619,30 @@
         }
       },
       "patch": {
-        "summary": "Nav items",
+        "summary": "Folder",
+        "description": "Patch folder",
         "tags": [
-          "Nav items"
+          "Folder"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "head",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Route pattern variable `id`"
+          }
+        ],
         "responses": {
           "200": {
             "description": "The requested resource"
@@ -681,6 +652,23 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "children": {},
+                  "tasks": {},
+                  "tag": {}
+                }
+              }
+            }
           }
         }
       }
@@ -1815,7 +1803,8 @@
             "in": "query",
             "name": "name",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             },
             "required": true
           },
@@ -1901,7 +1890,8 @@
             "in": "query",
             "name": "name",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             }
           },
           {
@@ -2379,7 +2369,8 @@
             "in": "query",
             "name": "title",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             },
             "required": true
           },
@@ -2520,7 +2511,8 @@
             "in": "query",
             "name": "title",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             }
           },
           {
@@ -3024,7 +3016,8 @@
             "in": "query",
             "name": "name",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             },
             "required": true
           },
@@ -3117,7 +3110,8 @@
             "in": "query",
             "name": "name",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "uniqueItems": true
             }
           },
           {

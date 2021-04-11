@@ -8,6 +8,7 @@ module.exports = {
     title: {
       type: 'string',
       required: true,
+      unique: true,
     },
     priority: {
       type: 'string',
