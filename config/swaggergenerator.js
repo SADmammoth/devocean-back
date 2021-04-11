@@ -20,4 +20,24 @@ module.exports['swagger-generator'] = {
   includeRoute: function (routeInfo) {
     return true;
   },
+  updateBlueprintActionTemplates: function (template) {
+    return Object.fromEntries(
+      Object.entries(template).map(([k, a]) => {
+        return [
+          k,
+          {
+            ...a,
+            modifiers: [
+              ...a.modifiers,
+              function (a, b, c, tags, d) {
+                tags = tags.forEach((tag) => {
+                  if (!tag.name.startsWith('#')) tag.name = '#' + tag.name;
+                });
+              },
+            ],
+          },
+        ];
+      })
+    );
+  },
 };

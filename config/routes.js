@@ -32,7 +32,7 @@ module.exports.routes = {
   },
 
   'get /folders': {
-    action: 'folders/index',
+    action: 'folders/get',
     swagger: {
       responses: {
         '200': {
@@ -51,7 +51,7 @@ module.exports.routes = {
   },
 
   'get /folders/:id': {
-    action: 'folders/id',
+    action: 'folders/get-by-id',
     swagger: {
       responses: {
         '200': {
@@ -72,6 +72,124 @@ module.exports.routes = {
 
   'patch /folders/:id': {
     action: 'folders/patch',
+  },
+
+  'get /tasks': {
+    action: 'tasks/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/task' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /tasks/:id': {
+    action: 'tasks/get-by-id',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/task' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /tasks': {
+    action: 'tasks/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/task' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'patch /tasks/:id/assignee': {
+    action: 'tasks/assign',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/task' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'patch /tasks/:id/status': {
+    action: 'tasks/set-status',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /teammates': {
+    action: 'teammates/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /statuses': {
+    action: 'statuses/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/status' },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 
   '/': { view: 'swagger-ui' },

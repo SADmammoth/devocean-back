@@ -25,35 +25,28 @@
   },
   "tags": [
     {
-      "name": "Assignee",
-      "description": "Sails blueprint actions for the **Assignee** model"
-    },
-    {
-      "name": "Notification",
-      "description": "Sails blueprint actions for the **Notification** model"
-    },
-    {
-      "name": "Status",
-      "description": "Sails blueprint actions for the **Status** model"
-    },
-    {
-      "name": "Tag",
-      "description": "Sails blueprint actions for the **Tag** model"
-    },
-    {
-      "name": "Task",
-      "description": "Sails blueprint actions for the **Task** model"
-    },
-    {
-      "name": "TaskCollection",
-      "description": "Sails blueprint actions for the **TaskCollection** model"
-    },
-    {
-      "name": "Teammate",
-      "description": "Sails blueprint actions for the **Teammate** model"
-    },
-    {
       "name": "Folder"
+    },
+    {
+      "name": "Task"
+    },
+    {
+      "name": "Teammate"
+    },
+    {
+      "name": "Status"
+    },
+    {
+      "name": "Assignee"
+    },
+    {
+      "name": "Notification"
+    },
+    {
+      "name": "Tag"
+    },
+    {
+      "name": "TaskCollection"
     }
   ],
   "components": {
@@ -167,6 +160,13 @@
           },
           "name": {
             "type": "string"
+          },
+          "tasks": {
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/task"
+            }
           }
         }
       },
@@ -281,11 +281,12 @@
             ]
           },
           "assignee": {
-            "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/assignee"
-            }
+            "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/assignee"
+              }
+            ]
           },
           "description": {
             "type": "string"
@@ -581,6 +582,195 @@
         }
       }
     },
+    "/tasks": {
+      "get": {
+        "summary": "Task",
+        "description": "Get all tasks, populated with tag",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/task"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Task",
+        "description": "Post task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of priority level"
+          },
+          {
+            "in": "query",
+            "name": "estimate",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "In milliseconds"
+          },
+          {
+            "in": "query",
+            "name": "reportedTime",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "In milliseconds"
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tag id"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id or name of status"
+          },
+          {
+            "in": "query",
+            "name": "teammate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id of teammate to assign task"
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates": {
+      "get": {
+        "summary": "Teammate",
+        "description": "Get teammates.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/statuses": {
+      "get": {
+        "summary": "Status",
+        "description": "Get statuses",
+        "tags": [
+          "Status"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/status"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/folders/{id}": {
       "get": {
         "summary": "Folder",
@@ -669,6 +859,154 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "summary": "Task",
+        "description": "Get full task content by id",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/assignee": {
+      "patch": {
+        "summary": "Task",
+        "description": "Assign teammate to task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task id to add assignee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teammateId": {
+                    "type": "string"
+                  },
+                  "assignedDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}/status": {
+      "patch": {
+        "summary": "Task",
+        "description": "Set status to task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task id to set status"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status name or id"
+          },
+          {
+            "in": "query",
+            "name": "assignedDate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Date status assigned"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -1396,7 +1734,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -1406,9 +1744,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -1455,7 +1803,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -1465,9 +1813,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -1517,6 +1875,18 @@
               "type": "string"
             },
             "required": true
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "schema": {
+              "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/task"
+              }
+            },
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -1571,6 +1941,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "schema": {
+              "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/task"
+              }
+            },
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated"
           }
         ],
         "responses": {
@@ -1625,6 +2007,193 @@
           },
           "404": {
             "description": "Cannot destroy, **Status** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/status/{_id}/{association}/add/{childid}": {
+      "get": {
+        "summary": "Add to for Status *",
+        "description": "Add a foreign record to one of this **Status** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Status** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/status/{_id}/{association}/replace": {
+      "get": {
+        "summary": "Replace for Status *",
+        "description": "Replace all of the child records in one of this **Status** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "query",
+            "name": "tasks",
+            "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                "uniqueItems": true
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Status** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/status/{_id}/{association}/remove/{childid}": {
+      "get": {
+        "summary": "Remove from for Status *",
+        "description": "Remove a foreign record from one of this **Status** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Status** record OR **FK record** with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -2445,13 +3014,14 @@
             "in": "query",
             "name": "assignee",
             "schema": {
-              "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated",
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/assignee"
-              }
+              "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/assignee"
+                }
+              ]
             },
-            "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated"
+            "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated"
           },
           {
             "in": "query",
@@ -2583,13 +3153,14 @@
             "in": "query",
             "name": "assignee",
             "schema": {
-              "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated",
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/assignee"
-              }
+              "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/assignee"
+                }
+              ]
             },
-            "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated"
+            "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated"
           },
           {
             "in": "query",
@@ -2651,193 +3222,6 @@
           },
           "404": {
             "description": "Cannot destroy, **Task** record with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/task/{_id}/{association}/add/{childid}": {
-      "get": {
-        "summary": "Add to for Task *",
-        "description": "Add a foreign record to one of this **Task** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          },
-          {
-            "in": "path",
-            "name": "childid",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                  "uniqueItems": true
-                }
-              ]
-            },
-            "description": "The desired target association record's foreign key value"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot perform add to, **Task** record OR **FK record** with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/task/{_id}/{association}/replace": {
-      "get": {
-        "summary": "Replace for Task *",
-        "description": "Replace all of the child records in one of this **Task** record's associations.\n\nOnly one of the query parameters, that matches the **association** path parameter, should be specified.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          },
-          {
-            "in": "query",
-            "name": "assignee",
-            "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                "uniqueItems": true
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot replace, **Task** record with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/task/{_id}/{association}/remove/{childid}": {
-      "get": {
-        "summary": "Remove from for Task *",
-        "description": "Remove a foreign record from one of this **Task** record's collections.\n\n(\\*) Note that this is a [Sails blueprint shortcut route](https://sailsjs.com/documentation/concepts/blueprints/blueprint-routes#?shortcut-blueprint-routes) (recommended for **development-mode only**)",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          },
-          {
-            "in": "path",
-            "name": "childid",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                  "uniqueItems": true
-                }
-              ]
-            },
-            "description": "The desired target association record's foreign key value"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot perform remove from, **Task** record OR **FK record** with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -4744,7 +5128,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -4754,9 +5138,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -4847,7 +5241,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
           },
@@ -4857,9 +5251,19 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "id,name"
+              "example": "id,name,tasks"
             },
             "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "populate",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "false,tasks"
+            },
+            "description": "If specified, overide the default automatic population process. Accepts a comma-separated list of attribute names for which to populate record values, or specify `false` to have no attributes populated."
           }
         ],
         "responses": {
@@ -4957,6 +5361,283 @@
           },
           "404": {
             "description": "Cannot destroy, **Status** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/status/{_id}/{association}/{childid}": {
+      "put": {
+        "summary": "Add to for Status",
+        "description": "Add a foreign record to one of this **Status** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform add to, **Status** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from for Status",
+        "description": "Remove a foreign record from one of this **Status** record's collections.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "in": "path",
+            "name": "childid",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "description": "The desired target association record's foreign key value"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot perform remove from, **Status** record OR **FK record** with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/status/{_id}/{association}": {
+      "put": {
+        "summary": "Replace for Status",
+        "description": "Replace all of the child records in one of this **Status** record's associations.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the newly updated **Status** record as a JSON dictionary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot replace, **Status** record with specified ID **NOT** found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "**Status** record's foreign key values to use as the replacement for this collection (**tasks** association)",
+                      "uniqueItems": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Populate association for Status",
+        "description": "Populate and return foreign record(s) for the given association of this **Status** record.",
+        "externalDocs": {
+          "url": "https://sailsjs.com/documentation/reference/blueprint-api/populate-where",
+          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/populate-where"
+        },
+        "tags": [
+          "Status"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ModelPKParam-status"
+          },
+          {
+            "in": "path",
+            "name": "association",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tasks"
+              ]
+            },
+            "description": "The name of the association"
+          },
+          {
+            "$ref": "#/components/parameters/WhereQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/LimitQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SkipQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/SortQueryParam"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,tasks"
+            },
+            "description": "The attributes to include in the result, specified as a comma-delimited list. By default, all attributes are selected. Not valid for plural (“collection”) association attributes."
+          },
+          {
+            "in": "query",
+            "name": "omit",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id,name,tasks"
+            },
+            "description": "The attributes to exclude from the result, specified as a comma-delimited list. Cannot be used in conjuction with `select`. Not valid for plural (“collection”) association attributes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Responds with the list of associated records as JSON dictionaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/task"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cannot populate, **Status** record with specified ID **NOT** found"
           },
           "500": {
             "description": "Internal server error"
@@ -5809,197 +6490,7 @@
         }
       }
     },
-    "/task/{_id}/{association}/{childid}": {
-      "put": {
-        "summary": "Add to for Task",
-        "description": "Add a foreign record to one of this **Task** record's collections.",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/add-to",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/add-to"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          },
-          {
-            "in": "path",
-            "name": "childid",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                  "uniqueItems": true
-                }
-              ]
-            },
-            "description": "The desired target association record's foreign key value"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot perform add to, **Task** record OR **FK record** with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Remove from for Task",
-        "description": "Remove a foreign record from one of this **Task** record's collections.",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/remove-from",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/remove-from"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          },
-          {
-            "in": "path",
-            "name": "childid",
-            "required": true,
-            "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                  "uniqueItems": true
-                }
-              ]
-            },
-            "description": "The desired target association record's foreign key value"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot perform remove from, **Task** record OR **FK record** with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/task/{_id}/{association}": {
-      "put": {
-        "summary": "Replace for Task",
-        "description": "Replace all of the child records in one of this **Task** record's associations.",
-        "externalDocs": {
-          "url": "https://sailsjs.com/documentation/reference/blueprint-api/replace",
-          "description": "See https://sailsjs.com/documentation/reference/blueprint-api/replace"
-        },
-        "tags": [
-          "Task"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ModelPKParam-task"
-          },
-          {
-            "in": "path",
-            "name": "association",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "assignee"
-              ]
-            },
-            "description": "The name of the association"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Responds with the newly updated **Task** record as a JSON dictionary",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/task"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Cannot replace, **Task** record with specified ID **NOT** found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        },
-        "requestBody": {
-          "description": "The primary key values (usually IDs) of the child records to use as the new members of this collection",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "oneOf": [
-                    {
-                      "type": "string",
-                      "description": "**Task** record's foreign key values to use as the replacement for this collection (**assignee** association)",
-                      "uniqueItems": true
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "summary": "Populate association for Task",
         "description": "Populate and return foreign record(s) for the given association of this **Task** record.",
