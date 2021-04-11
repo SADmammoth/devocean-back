@@ -13,17 +13,17 @@ module.exports = {
   exits: {},
 
   fn: async function ({ name, children, tasks, tag }) {
-    let tagToSave;
-    if (typeof tag === 'string') {
-      tagToSave = await Tag.updateOne({ id: tag }, { tasks }).fetch();
-    } else if (tag.color && tag.name) {
-      tagToSave = await Tag.create({ ...tag, tasks }).fetch();
+    const tagToSave = await sails.helpers.getTag(tag, tasks);
+
+    let tagToSaveId;
+    if (tagToSave) {
+      tagToSaveId = tagToSave.id;
     }
 
     const folder = await TaskCollection.create({
       name,
       children,
-      tag: tagToSave.id,
+      tag: tagToSaveId,
     });
 
     return folder;
