@@ -149,7 +149,23 @@ module.exports.routes = {
           description: 'The requested resource',
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/teammate' },
+              schema: { $ref: '#/components/schemas/task' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'patch /tasks/:id/list': {
+    action: 'tasks/add-to-list',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/task' },
             },
           },
         },

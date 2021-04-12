@@ -28,6 +28,7 @@ module.exports = {
         ...rest
       }) => {
         return {
+          id,
           assignee: assignee.teammate,
           tag: tagFields,
           status: statusName,
