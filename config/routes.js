@@ -192,6 +192,57 @@ module.exports.routes = {
     },
   },
 
+  'get /notifications': {
+    action: 'notifications/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/status' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /notifications/:id': {
+    action: 'notifications/get-by-id',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/status' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /notifications': {
+    action: 'notifications/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/status' },
+            },
+          },
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************
