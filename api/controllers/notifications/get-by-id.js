@@ -10,7 +10,7 @@ module.exports = {
   exits: {},
 
   fn: async function ({ id }) {
-    const notification = await Notification.findOne({ id });
-    return notification;
+    const notification = await Notification.findOne({ id }).populate('author');
+    return await sails.helpers.depopulateNotificationsAuthors([notification]);
   },
 };

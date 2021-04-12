@@ -17,7 +17,8 @@ module.exports = {
     const notifications = await Notification.find({
       where: { author: teammateId },
       select,
-    });
-    return notifications;
+    }).populate('author');
+
+    return await sails.helpers.depopulateNotificationsAuthors(notifications);
   },
 };
