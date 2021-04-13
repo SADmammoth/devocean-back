@@ -25,7 +25,7 @@ module.exports = {
     reportedTime: {
       ...Duration,
     },
-    tag: { model: 'tag' },
+    list: { model: 'taskcollection', required: true },
     status: { model: 'status', required: true },
     assignee: { model: 'assignee' },
     description: {

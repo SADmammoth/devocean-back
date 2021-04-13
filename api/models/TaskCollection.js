@@ -5,6 +5,7 @@ module.exports = {
       collection: 'taskcollection',
       via: 'parent',
     },
+    tasks: { collection: 'task', via: 'list' },
     parent: {
       model: 'taskcollection',
     },
@@ -14,14 +15,6 @@ module.exports = {
   },
 
   customToJSON: function () {
-    let type = 'unknown';
-    if (this.children && this.children.length) {
-      type = 'list';
-    }
-    if (this.tag) {
-      type = 'folder';
-    }
-    const { id, ...fields } = this;
-    return { id, type, ...fields };
+    return sails.helpers.populateListWithType(this);
   },
 };

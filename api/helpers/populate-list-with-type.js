@@ -1,6 +1,8 @@
 module.exports = {
   friendlyName: 'Populate list with type',
 
+  sync: true,
+
   inputs: {
     list: { type: 'ref', required: true },
   },
@@ -11,7 +13,7 @@ module.exports = {
     },
   },
 
-  fn: async function ({ list }) {
+  fn: function ({ list }) {
     let type = 'folder';
     if (list.tag) {
       type = 'list';

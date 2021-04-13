@@ -1,10 +1,10 @@
 module.exports = {
-  friendlyName: 'Populate full task',
+  friendlyName: 'Map short task',
 
   description: '',
 
   inputs: {
-    query: { type: 'ref', description: 'Query of task to populate' },
+    task: { type: 'ref' },
   },
 
   exits: {
@@ -13,22 +13,12 @@ module.exports = {
     },
   },
 
-  fn: async function ({ query }) {
-    const task = await query()
-      .populate('list')
-      .populate('status')
-      .populate('assignee');
-
-    if (!task) {
-      return;
-    }
-
+  fn: async function ({ task }) {
     const {
       id,
       assignee,
       list,
       status: { name: statusName },
-      timeInStatus,
       ...rest
     } = task;
 
@@ -38,14 +28,13 @@ module.exports = {
     });
 
     let teammate;
-    if (assignee) teammate = await sails.helpers.assigneeToTeammate(assignee);
+    if (assignee) teammate = assignee.teammate;
 
     return {
       id,
       assignee: teammate,
-      list: list.id,
       tag,
-      status: { name: statusName, timeInStatus },
+      status: statusName,
       ...rest,
     };
   },

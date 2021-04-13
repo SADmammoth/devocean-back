@@ -19,8 +19,7 @@ module.exports = {
     const foundList = await TaskCollection.findOne({
       or: [{ id: list }, { name: list }],
     });
-    const tag = foundList.tag;
-    const task = await Task.updateOne({ id }, { tag });
+    const task = await Task.updateOne({ id }, { list: foundList.id });
     return task;
   },
 };

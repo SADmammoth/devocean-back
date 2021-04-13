@@ -15,7 +15,7 @@ module.exports = {
 
   fn: async function ({ query }) {
     const task = await query()
-      .populate('tag')
+      .populate('list')
       .populate('status')
       .populate('assignee');
 
@@ -23,21 +23,6 @@ module.exports = {
       return;
     }
 
-    const {
-      id,
-      assignee,
-      tag: { id: tagId, ...tagFields },
-      status: { name: statusName },
-      timeInStatus,
-      ...rest
-    } = task;
-
-    return {
-      id,
-      assignee: assignee.teammate,
-      tag: tagFields,
-      status: statusName,
-      ...rest,
-    };
+    return await sails.helpers.mapShortTask(task);
   },
 };

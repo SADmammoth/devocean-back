@@ -10,10 +10,7 @@ module.exports = {
   },
 
   fn: async function () {
-    const query = () =>
-      Task.find({
-        select: ['id', 'title', 'priority', 'tag', 'status'],
-      });
+    const query = () => Task.find();
 
     return await sails.helpers.populateShortTaskCollection(query);
   },

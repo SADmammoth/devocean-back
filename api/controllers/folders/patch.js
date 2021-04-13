@@ -4,32 +4,71 @@ module.exports = {
   description: 'Patch folder',
 
   inputs: {
-    id: { type: 'string', required: true, meta: { swagger: { in: 'head' } } },
-    name: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
+    id: { type: 'string', required: true, meta: { swagger: { in: 'path' } } },
+    name: { type: 'string', meta: { swagger: { in: 'body' } } },
     children: { type: 'ref', meta: { swagger: { in: 'body' } } },
     tasks: { type: 'ref', meta: { swagger: { in: 'body' } } },
     tag: { type: 'json', meta: { swagger: { in: 'body' } } },
   },
 
-  exits: {},
+  exits: {
+    success: { outputType: 'ref' },
+    badRequest: {
+      responseType: 'badRequest',
+    },
+  },
 
-  fn: async function ({ id, name, children, tasks, tag }) {
-    const tagToSave = await sails.helpers.getTag(tag, tasks);
+  fn: async function ({ id, name, parent, tag }) {
+    const folder = await TaskCollection.findOne({ id })
+      .populate('children')
+      .populate('tasks');
+    const typeByFields = sails.helpers.getCollectionTypeByFields.with({
+      children: folder.children,
+      tasks: folder.tasks,
+      tag: tag || folder.tag,
+    });
 
-    let tagToSaveId;
-    if (tagToSave) {
-      tagToSaveId = tagToSave.id;
+    console.log(typeByFields, {
+      children: folder.children,
+      tasks: folder.tasks,
+      tag: tag || folder.tag,
+    });
+
+    if (!typeByFields) {
+      throw {
+        badRequest: {
+          message:
+            'Ambiguous request params: ' +
+            'unable to collection type' +
+            'or try to change collection type',
+        },
+      };
     }
 
-    const folder = await TaskCollection.updateOne(
+    let tagToSaveId;
+    if (tag) {
+      const tagToSave = await sails.helpers.getTag(tag);
+      tagToSaveId = tagToSave ? tagToSave.id : null;
+    }
+
+    const parentFolder = await sails.helpers.findListParent(parent);
+    if (!parentFolder || parentFolder.name === 'Root folder') {
+      throw {
+        badRequest: {
+          message: 'Bad request: list cannot be parent or parent not found',
+        },
+      };
+    }
+
+    const updatedFolder = await TaskCollection.updateOne(
       { id },
       {
         name,
-        children,
+        parent,
         tag: tagToSaveId,
       }
     );
 
-    return folder;
+    return updatedFolder;
   },
 };

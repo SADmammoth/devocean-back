@@ -1,3 +1,5 @@
+const _ = require('@sailshq/lodash');
+
 module.exports = {
   friendlyName: 'Folder',
 
@@ -11,16 +13,30 @@ module.exports = {
     },
   },
 
+  exits: {
+    success: {},
+    notFound: {
+      responseType: 'notFound',
+    },
+  },
+
   fn: async function ({ id }) {
-    const lists = await TaskCollection.findOne({ id });
+    const list = await TaskCollection.findOne({ id })
+      .populate('tag')
+      .populate('tasks')
+      .populate('children');
 
-    const list = await Promise.all(
-      lists.map(async (list) => {
-        const newList = await sails.helpers.populateListWithTasks(list);
-        return await sails.helpers.populateListWithType(newList);
-      })
-    );
+    if (!list) {
+      throw 'notFound';
+    }
+    const parent = await TaskCollection.findOne({ id: list.parent });
 
-    return list;
+    const newList = {
+      ...list,
+      parent: { id: parent.id, name: parent.name },
+      tag: _.omit(list.tag, 'id'),
+    };
+
+    return newList;
   },
 };

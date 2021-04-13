@@ -9,7 +9,6 @@ module.exports = {
       description: 'Tag id or tag object',
       required: true,
     },
-    tasks: { type: 'ref', description: 'Array of tasks, added to tag' },
   },
 
   exits: {
@@ -18,13 +17,13 @@ module.exports = {
     },
   },
 
-  fn: async function ({ tagInput, tasks }) {
+  fn: async function ({ tagInput }) {
     let tag;
 
     if (typeof tagInput === 'string') {
-      tag = await Tag.updateOne({ id: tagInput }, { tasks }).fetch();
+      tag = await Tag.findOne({ id: tagInput });
     } else if (tagInput.color && tagInput.name) {
-      tag = await Tag.create({ ...tagInput, tasks }).fetch();
+      tag = await Tag.create({ ...tagInput }).fetch();
     } else {
       return null;
     }

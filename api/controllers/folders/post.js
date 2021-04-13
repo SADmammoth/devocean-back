@@ -5,21 +5,31 @@ module.exports = {
 
   inputs: {
     name: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
-    children: { type: 'ref', meta: { swagger: { in: 'body' } } },
-    tasks: { type: 'ref', meta: { swagger: { in: 'body' } } },
     tag: { type: 'json', meta: { swagger: { in: 'body' } } },
-    listId: { type: 'string', meta: { swagger: { in: 'body' } } },
     parent: { type: 'string', meta: { swagger: { in: 'body' } } },
+    type: {
+      type: 'string',
+      isIn: ['list', 'folder'],
+      meta: { swagger: { in: 'body' } },
+    },
   },
 
   exits: {
+    success: { outputType: 'ref' },
+    notUnique: { responseType: 'notUnique' },
+    notModified: { responseType: 'notModified' },
     badRequest: {
       responseType: 'badRequest',
     },
   },
 
-  fn: async function ({ name, children, tasks, tag, parent }) {
-    if ((tag && children) || (children && tasks)) {
+  fn: async function ({ type, name, tag, parent }) {
+    const typeByFields = sails.helpers.getCollectionTypeByFields(tag);
+
+    if (
+      (typeByFields === 'unknown' && !type) ||
+      (typeByFields !== 'unknown' && (typeByFields !== type || !typeByFields))
+    ) {
       throw {
         badRequest: {
           message:
@@ -30,14 +40,27 @@ module.exports = {
       };
     }
 
+    type = typeByFields !== 'unknown' ? typeByFields : type;
+
     let tagToSaveId;
     if (tag) {
-      const tagToSave = await sails.helpers.getTag(tag, tasks);
+      const tagToSave = await sails.helpers.getTag(tag);
       tagToSaveId = tagToSave ? tagToSave.id : null;
     }
 
-    if (!tagToSaveId && !tag) {
-      tagToSaveId = await Tag.create({ color: '', name, tasks }).fetch();
+    if (type === 'list' && !tagToSaveId && !tag) {
+      const tagToSave = await Tag.create({ color: '', name })
+        .intercept((err) => {
+          if (err.code === 'E_UNIQUE') {
+            return {
+              notUnique: 'List is created or database is not consistent',
+            };
+          }
+          return err;
+        })
+        .fetch();
+
+      tagToSaveId = tagToSave.id;
     }
 
     if (!tagToSaveId) {
@@ -48,14 +71,19 @@ module.exports = {
       };
     }
 
-    if (!parent) {
-      const rootFolder = await TaskCollection.findOne({ name: 'Root folder' });
-      parent = rootFolder.id;
+    const parentFolder = await sails.helpers.findListParent(parent);
+    if (!parentFolder) {
+      throw {
+        badRequest: {
+          message: 'Bad request: list cannot be parent or parent not found',
+        },
+      };
     }
 
     const folder = await TaskCollection.create({
       name,
-      children,
+      tasks: type === 'list' ? [] : undefined,
+      children: type === 'folder' ? [] : undefined,
       tag: tagToSaveId,
       parent,
     }).fetch();

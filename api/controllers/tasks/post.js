@@ -7,25 +7,44 @@ module.exports = {
     title: {
       type: 'string',
       required: true,
+      meta: { swagger: { in: 'body' } },
     },
     priority: {
       type: 'string',
       description: 'Name of priority level',
       required: true,
+      meta: { swagger: { in: 'body' } },
     },
     estimate: {
       type: 'number',
       description: 'In milliseconds',
+      meta: { swagger: { in: 'body' } },
     },
     reportedTime: {
       type: 'number',
       description: 'In milliseconds',
+      meta: { swagger: { in: 'body' } },
     },
-    tag: { type: 'string', description: 'Tag id' },
-    status: { type: 'string', description: 'Id or name of status' },
-    teammate: { type: 'string', description: 'Id of teammate to assign task' },
+    list: {
+      type: 'string',
+      defaultsTo: 'Root list',
+      description: 'List id or name',
+      meta: { swagger: { in: 'body' } },
+    },
+    status: {
+      type: 'string',
+      defaultsTo: 'backlog',
+      description: 'Id or name of status',
+      meta: { swagger: { in: 'body' } },
+    },
+    teammate: {
+      type: 'string',
+      description: 'Id of teammate to assign task',
+      meta: { swagger: { in: 'body' } },
+    },
     description: {
       type: 'string',
+      meta: { swagger: { in: 'body' } },
     },
   },
 
@@ -36,21 +55,23 @@ module.exports = {
     priority,
     estimate,
     reportedTime,
-    tag,
+    list,
     status,
     teammate,
     description,
   }) {
-    const defaultStatus = await Status.findOne({ name: 'backlog' });
-    const defaultTag = await Tag.findOne({ name: 'Root' });
+    const foundStatus = await Status.findOne({ name: status });
+    const foundList = await TaskCollection.findOne({
+      or: [{ name: list }, { id: list }],
+    });
 
     const task = await Task.create({
       title,
       priority,
       estimate,
       reportedTime,
-      tag: tag || defaultTag.id,
-      status: status || defaultStatus.id,
+      list: foundList.id,
+      status: foundStatus.id,
       timeInStatus: new Date(),
       description,
     }).fetch();
@@ -59,6 +80,10 @@ module.exports = {
       return task;
     }
 
-    return await sails.helpers.assignTask(task.id, teammate.id, new Date());
+    await sails.helpers.assignTask(task.id, teammate.id, new Date());
+
+    const query = () => Task.findOne({ id: task.id });
+
+    return await sails.helpers.populateFullTask(query);
   },
 };

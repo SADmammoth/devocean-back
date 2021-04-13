@@ -68,10 +68,34 @@ module.exports.routes = {
 
   'post /folders': {
     action: 'folders/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/taskcollection' },
+            },
+          },
+        },
+      },
+    },
   },
 
   'patch /folders/:id': {
     action: 'folders/patch',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/taskcollection' },
+            },
+          },
+        },
+      },
+    },
   },
 
   'get /tasks': {
