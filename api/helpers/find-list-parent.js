@@ -17,9 +17,8 @@ module.exports = {
     const parent = await TaskCollection.findOne({
       or: [{ id: folder }, { name: folder }],
     });
-    const { type } = sails.helpers.populateListWithType(parent);
 
-    if (type === 'list') {
+    if (parent.type === 'list') {
       return null;
     }
 

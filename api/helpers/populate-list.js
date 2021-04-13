@@ -16,7 +16,7 @@ module.exports = {
   },
 
   fn: async function ({ list }) {
-    let newList = sails.helpers.populateListWithType(list);
+    let newList = list;
     if (newList.type === 'list') {
       newList = {
         ..._.omit(newList, ['children']),

@@ -39,14 +39,14 @@ module.exports.bootstrap = async function () {
   if ((await TaskCollection.count()) === 0) {
     const rootFolder = await TaskCollection.create({
       id: '60741c66ee507b6198dadd02',
+      type: 'folder',
       name: 'Root folder',
-      children: [],
     }).fetch();
     await TaskCollection.create({
       id: '60741c66ee507b6198dadd03',
+      type: 'list',
       name: 'Root list',
       tag: rootTag.id,
-      tasks: [],
       parent: rootFolder.id,
     });
   }

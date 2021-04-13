@@ -5,13 +5,14 @@ module.exports = {
 
   inputs: {
     name: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
-    tag: { type: 'json', meta: { swagger: { in: 'body' } } },
-    parent: { type: 'string', meta: { swagger: { in: 'body' } } },
     type: {
       type: 'string',
       isIn: ['list', 'folder'],
+      required: true,
       meta: { swagger: { in: 'body' } },
     },
+    tag: { type: 'json', meta: { swagger: { in: 'body' } } },
+    parent: { type: 'string', meta: { swagger: { in: 'body' } } },
   },
 
   exits: {
@@ -53,7 +54,8 @@ module.exports = {
         .intercept((err) => {
           if (err.code === 'E_UNIQUE') {
             return {
-              notUnique: 'List is created or database is not consistent',
+              notUnique:
+                'List is already created or database is not consistent',
             };
           }
           return err;
@@ -82,8 +84,7 @@ module.exports = {
 
     const folder = await TaskCollection.create({
       name,
-      tasks: type === 'list' ? [] : undefined,
-      children: type === 'folder' ? [] : undefined,
+      type,
       tag: tagToSaveId,
       parent,
     }).fetch();

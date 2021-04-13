@@ -22,13 +22,8 @@ module.exports = {
     const folder = await TaskCollection.findOne({ id })
       .populate('children')
       .populate('tasks');
-    const typeByFields = sails.helpers.getCollectionTypeByFields.with({
-      children: folder.children,
-      tasks: folder.tasks,
-      tag: tag || folder.tag,
-    });
 
-    console.log(typeByFields, {
+    const typeByFields = sails.helpers.getCollectionTypeByFields.with({
       children: folder.children,
       tasks: folder.tasks,
       tag: tag || folder.tag,

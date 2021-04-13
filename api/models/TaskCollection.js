@@ -1,6 +1,9 @@
+const collectionTypes = require('../types/enums/collectionTypes');
+
 module.exports = {
   attributes: {
     name: { type: 'string', required: true, unique: true },
+    type: { type: 'string', isIn: collectionTypes, required: true },
     children: {
       collection: 'taskcollection',
       via: 'parent',
@@ -12,9 +15,5 @@ module.exports = {
     tag: {
       model: 'tag',
     },
-  },
-
-  customToJSON: function () {
-    return sails.helpers.populateListWithType(this);
   },
 };
