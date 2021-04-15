@@ -1,5 +1,6 @@
 const _ = require('@sailshq/lodash');
 const Date = require('../types/Date');
+const notificationStatuses = require('../types/enums/notificationStatuses');
 
 module.exports = {
   attributes: {
@@ -10,5 +11,9 @@ module.exports = {
     },
     author: { model: 'teammate' },
     fullText: { type: 'string' },
+    status: {
+      type: 'string',
+      isIn: notificationStatuses,
+    },
   },
 };

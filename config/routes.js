@@ -242,7 +242,7 @@ module.exports.routes = {
             'application/json': {
               schema: {
                 type: 'array',
-                items: { $ref: '#/components/schemas/status' },
+                items: { $ref: '#/components/schemas/notification' },
               },
             },
           },
@@ -259,7 +259,7 @@ module.exports.routes = {
           description: 'The requested resource',
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/status' },
+              schema: { $ref: '#/components/schemas/notification' },
             },
           },
         },
@@ -275,7 +275,62 @@ module.exports.routes = {
           description: 'The requested resource',
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/status' },
+              schema: { $ref: '#/components/schemas/notification' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /notifications/receive': {
+    action: 'notifications/receive',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/notification' },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'patch /notifications/:id/cancel': {
+    action: 'notifications/cancel',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/notification',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'patch /notifications/:id': {
+    action: 'notifications/patch',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/notification',
+              },
             },
           },
         },
