@@ -22,7 +22,7 @@ module.exports = {
           status: 'cancelled',
         },
       ],
-    });
+    }).populate('author');
 
     if (!notifications) {
       return [];

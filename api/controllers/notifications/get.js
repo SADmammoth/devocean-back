@@ -14,10 +14,14 @@ module.exports = {
     if (teammateId) {
       select = ['id', 'title', 'time'];
     }
+
     const notifications = await Notification.find({
-      where: { author: teammateId },
-      select,
+      author: teammateId,
     }).populate('author');
+
+    if (!notifications) {
+      return [];
+    }
 
     return await sails.helpers.depopulateNotificationsAuthors(notifications);
   },
