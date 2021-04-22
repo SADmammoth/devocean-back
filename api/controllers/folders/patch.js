@@ -23,12 +23,21 @@ module.exports = {
       .populate('children')
       .populate('tasks');
 
+    if (folder.isConstant) {
+      throw {
+        badRequest: {
+          message: 'Collection you trying to change is not editable',
+        },
+      };
+    }
+
     const typeByFields = sails.helpers.getCollectionTypeByFields.with({
       children: folder.children,
       tasks: folder.tasks,
       tag: tag || folder.tag,
     });
 
+    console.log(folder, tag);
     if (!typeByFields) {
       throw {
         badRequest: {
@@ -47,7 +56,7 @@ module.exports = {
     }
 
     const parentFolder = await sails.helpers.findListParent(parent);
-    if (!parentFolder || parentFolder.name === 'Root folder') {
+    if (!parentFolder) {
       throw {
         badRequest: {
           message: 'Bad request: list cannot be parent or parent not found',

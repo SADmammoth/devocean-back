@@ -15,5 +15,9 @@ module.exports = {
     tag: {
       model: 'tag',
     },
+
+    isConstant: {
+      type: 'boolean',
+    },
   },
 };

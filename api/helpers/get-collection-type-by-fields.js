@@ -18,17 +18,19 @@ module.exports = {
   },
 
   fn: function ({ tag, children, tasks }) {
-    if ((tag && children) || (children && tasks)) {
+    const isChildrenEmpty = children && children.length;
+    const isTasksEmpty = tasks && tasks.length;
+    if ((tag && isChildrenEmpty) || (isChildrenEmpty && isTasksEmpty)) {
       return false;
     }
 
     let typeByFields = 'unknown';
 
-    if (tag || tasks) {
+    if (tag || isTasksEmpty) {
       typeByFields = 'list';
     }
 
-    if (children) {
+    if (isChildrenEmpty) {
       typeByFields = 'folder';
     }
 

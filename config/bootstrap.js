@@ -41,6 +41,7 @@ module.exports.bootstrap = async function () {
       id: '60741c66ee507b6198dadd02',
       type: 'folder',
       name: 'Root folder',
+      isConstant: true,
     }).fetch();
     await TaskCollection.create({
       id: '60741c66ee507b6198dadd03',
@@ -48,6 +49,7 @@ module.exports.bootstrap = async function () {
       name: 'Root list',
       tag: rootTag.id,
       parent: rootFolder.id,
+      isConstant: true,
     });
   }
 };
