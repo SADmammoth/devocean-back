@@ -149,6 +149,22 @@ module.exports.routes = {
     },
   },
 
+  'patch /tasks/:id': {
+    action: 'tasks/patch',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/task' },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'patch /tasks/:id/assignee': {
     action: 'tasks/assign',
     swagger: {
