@@ -19,6 +19,9 @@ module.exports = {
       assignees.map(async (assignee) => {
         const { id, task } = assignee;
         foundTask = await Task.findOne({ id: task });
+        if (!foundTask) {
+          return;
+        }
         return foundTask.assignee === id ? assignee : undefined;
       })
     );

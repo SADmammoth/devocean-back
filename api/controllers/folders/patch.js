@@ -68,7 +68,7 @@ module.exports = {
       { id },
       {
         name,
-        parent,
+        parent: parentFolder.id,
         tag: tagToSaveId,
       }
     );
