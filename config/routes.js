@@ -247,6 +247,21 @@ module.exports.routes = {
       },
     },
   },
+  'post /statuses': {
+    action: 'statuses/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/status' },
+            },
+          },
+        },
+      },
+    },
+  },
 
   'get /notifications': {
     action: 'notifications/get',
