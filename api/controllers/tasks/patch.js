@@ -40,6 +40,10 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'body' } },
     },
+    customFields: {
+      type: 'json',
+      meta: { swagger: { in: 'body' } },
+    },
   },
 
   exits: {},

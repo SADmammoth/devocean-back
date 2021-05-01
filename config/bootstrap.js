@@ -52,4 +52,8 @@ module.exports.bootstrap = async function () {
       isConstant: true,
     });
   }
+
+  if ((await Template.count()) === 0) {
+    await Template.createEach(sails.config.custom.templates.items);
+  }
 };

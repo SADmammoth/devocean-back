@@ -369,6 +369,42 @@ module.exports.routes = {
     },
   },
 
+  'get /templates': {
+    action: 'templates/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/template',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /templates/:id': {
+    action: 'templates/get-by-id',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/template',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************

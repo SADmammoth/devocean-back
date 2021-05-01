@@ -28,8 +28,7 @@ module.exports = {
     list: { model: 'taskcollection', required: true },
     status: { model: 'status', required: true },
     assignee: { model: 'assignee' },
-    description: {
-      type: 'string',
-    },
+    template: { model: 'template', required: true },
+    customFields: { type: 'json', required: true },
   },
 };

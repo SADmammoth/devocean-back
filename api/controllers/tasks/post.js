@@ -42,8 +42,12 @@ module.exports = {
       description: 'Id of teammate to assign task',
       meta: { swagger: { in: 'body' } },
     },
-    description: {
+    template: {
       type: 'string',
+      meta: { swagger: { in: 'body' } },
+    },
+    customFields: {
+      type: 'json',
       meta: { swagger: { in: 'body' } },
     },
   },
@@ -58,11 +62,16 @@ module.exports = {
     list,
     status,
     teammate,
-    description,
+    template,
+    customFields,
   }) {
     const foundStatus = await Status.findOne({ name: status });
     const foundList = await TaskCollection.findOne({
       or: [{ name: list }, { id: list }],
+    });
+
+    const foundTemplate = await Template.findOne({
+      name: template || 'No template',
     });
 
     const task = await Task.create({
@@ -73,7 +82,8 @@ module.exports = {
       list: foundList.id,
       status: foundStatus.id,
       timeInStatus: new Date(),
-      description,
+      template: foundTemplate.id,
+      customFields,
     }).fetch();
 
     if (!teammate) {
