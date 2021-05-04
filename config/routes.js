@@ -441,6 +441,50 @@ module.exports.routes = {
     },
   },
 
+  'get /dev/backup': {
+    action: 'dev/backup/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /dev/backup': {
+    action: 'dev/backup/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /dev/faker/task': {
+    action: 'dev/faker/task',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /dev/faker/notification': {
+    action: 'dev/faker/notification',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************
