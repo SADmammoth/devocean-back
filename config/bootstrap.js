@@ -47,8 +47,8 @@ module.exports.bootstrap = async function () {
       id: '60741c66ee507b6198dadd03',
       type: 'list',
       name: 'Root list',
-      tag: rootTag.id,
-      parent: rootFolder.id,
+      tag: '60741c66ee507b6198dadd01',
+      parent: '60741c66ee507b6198dadd02',
       isConstant: true,
     });
   }

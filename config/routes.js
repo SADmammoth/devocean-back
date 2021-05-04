@@ -405,6 +405,42 @@ module.exports.routes = {
     },
   },
 
+  'get /tasks/:id/discussions': {
+    action: 'comments/discussions/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/discussions',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /tasks/:id/discussions': {
+    action: 'comments/discussions/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/discussions',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************
