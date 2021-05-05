@@ -13,6 +13,10 @@ module.exports = {
       type: 'ref',
       defaultsTo: {},
     },
+    addUndefined: {
+      type: 'bool',
+      defaultsTo: false,
+    },
   },
 
   exits: {
@@ -21,9 +25,13 @@ module.exports = {
     },
   },
 
-  fn: async function ({ Model, criteria }) {
+  fn: async function ({ Model, criteria, addUndefined }) {
     const items = await Model.find(criteria);
 
+    if (addUndefined) {
+      items.push({});
+    }
+    console.log(items);
     return random.arrayElement(items);
   },
 };

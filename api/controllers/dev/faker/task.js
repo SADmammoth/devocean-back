@@ -79,7 +79,8 @@ module.exports = {
             ).id,
           status: status || (await sails.helpers.faker.randomRecord(Status)).id,
           teammate:
-            teammate || (await sails.helpers.faker.randomRecord(Teammate)).id,
+            teammate ||
+            (await sails.helpers.faker.randomRecord(Teammate, {}, true)).id,
           template:
             template || (await sails.helpers.faker.randomRecord(Template)).id,
           customFields: customFields || {},
