@@ -2,5 +2,5 @@ const DateType = require('./Date');
 
 module.exports = {
   ...DateType,
-  isBefore: new Date(Date.now() + 60000),
+  isBefore: new Date(Date.now() + 3600000),
 };

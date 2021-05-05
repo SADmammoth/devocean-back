@@ -1,11 +1,11 @@
-const DateInPast = require('./DateInPast');
+const Date = require('./Date');
 
 module.exports = {
   author: {
     model: 'teammate',
   },
   time: {
-    ...DateInPast,
+    ...Date,
     required: true,
   },
   task: {
