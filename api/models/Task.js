@@ -32,3 +32,34 @@ module.exports = {
     customFields: { type: 'json', required: true },
   },
 };
+
+sails.on('task:created', async ({ change }) => {
+  return await History.create({
+    time: new Date(),
+    author: (await Teammate.find())[0].id,
+    task: change.id,
+    changedFields: Object.keys(change),
+    after: change,
+  });
+});
+
+sails.on('task:updated', async ({ change, diff }) => {
+  const lastChange = await History.find({
+    where: { changedFields: Object.keys(diff) },
+    sort: [{ updatedAt: 'DESC' }],
+    select: ['after', 'changedFields'],
+  });
+
+  return await History.create({
+    time: new Date(),
+    author: (await Teammate.find())[0].id,
+    task: change.id,
+    changedFields: Object.keys(diff),
+    before: Object.fromEntries(
+      Object.entries(diff).map(([key, value]) => {
+        return [key, lastChange[0].after[key]];
+      })
+    ),
+    after: diff,
+  });
+});

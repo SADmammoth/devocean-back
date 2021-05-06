@@ -20,7 +20,7 @@ module.exports = {
   },
 };
 
-sails.on('notification:updated', async (model) => {
+sails.on('notification:updated', async ({ changes: model }) => {
   const response = await request
     .get('/notifications/notify')
     .use(prefix(sails.config.custom.subscriptionServer));

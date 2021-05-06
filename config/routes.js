@@ -441,6 +441,24 @@ module.exports.routes = {
     },
   },
 
+  'get /tasks/:id/statusChanges': {
+    action: 'comments/status-changes/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/statuschanges',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'get /dev/backup': {
     action: 'dev/backup/get',
     swagger: {

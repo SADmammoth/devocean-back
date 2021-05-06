@@ -19,11 +19,18 @@ module.exports = {
       type: 'string',
       description: 'Date status assigned',
     },
+    text: {
+      type: 'string',
+      description: 'Comment to status change',
+    },
+    author: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ id, status, assignedDate }, res) {
+  fn: async function ({ id, status, assignedDate, text, author }, res) {
     const foundStatus = await Status.findOne({
       or: [
         {
@@ -34,6 +41,20 @@ module.exports = {
         },
       ],
     });
+
+    if (foundStatus) {
+      const oldTask = await Task.findOne({ id });
+      if (oldTask.status !== foundStatus.id) {
+        await sails.helpers.statusChanges.post.with({
+          id,
+          fromStatus: oldTask.status,
+          toStatus: foundStatus.id,
+          time: assignedDate ? new Date(assignedDate) : new Date(),
+          text,
+          author,
+        });
+      }
+    }
 
     const updatedTask = await Task.updateOne(
       { id },

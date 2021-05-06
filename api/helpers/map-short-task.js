@@ -34,7 +34,7 @@ module.exports = {
       id,
       assignee: teammate,
       tag,
-      status: statusName,
+      status: { name: statusName },
       list,
       ...rest,
     };

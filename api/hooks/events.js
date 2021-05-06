@@ -1,9 +1,12 @@
+let lastChange = null;
+
 module.exports = function eventsHook(app) {
   return {
     initialize(done) {
       app.after('hook:orm:loaded', () => {
         const events = {
           created: 'afterCreate',
+          diffReceived: 'beforeUpdate',
           updated: 'afterUpdate',
           destroyed: 'afterDestroy',
         };
@@ -20,6 +23,16 @@ module.exports = function eventsHook(app) {
             const callbacks = app.models[model]._callbacks;
             callbacks[method] = setupEvent(app, evt, callbacks[method]);
           }
+
+          const callback = app.models[model]._callbacks.beforeUpdate;
+          app.models[model]._callbacks.beforeUpdate = async (changes, done) => {
+            changes = changes instanceof Array ? changes : [changes];
+
+            setupEvent.lastChange = changes;
+            if (callback) return callback(changes, done);
+
+            return done();
+          };
         }
       });
 
@@ -36,13 +49,16 @@ module.exports = function eventsHook(app) {
  * @return    {Function}              The actual function who will emit the event on the Sails app
  */
 function setupEvent(emitter, event, defaultCallback) {
-  return function modelEvent(changes, done) {
+  return (changes, done) => {
     // Normalise... Some events emit an array of changed model objects so let's normalise everything
     // into an array and then loop through all of them and emit them one by one
     changes = changes instanceof Array ? changes : [changes];
 
-    for (const change of changes) {
-      emitter.emit(event, change);
+    for (const id in changes) {
+      emitter.emit(event, {
+        change: changes[id],
+        diff: setupEvent.lastChange?.[id],
+      });
     }
 
     if (defaultCallback) return defaultCallback(changes, done);
