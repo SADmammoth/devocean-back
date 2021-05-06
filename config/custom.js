@@ -109,4 +109,5 @@ module.exports.custom = {
       }),
     },
   },
+  subscriptionServer: 'http://localhost:1338',
 };

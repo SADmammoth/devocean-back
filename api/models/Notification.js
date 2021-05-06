@@ -1,4 +1,6 @@
 const _ = require('@sailshq/lodash');
+const request = require('superagent');
+const prefix = require('superagent-prefix');
 const Date = require('../types/Date');
 const notificationStatuses = require('../types/enums/notificationStatuses');
 
@@ -17,3 +19,19 @@ module.exports = {
     },
   },
 };
+
+sails.on('notification:updated', async (model) => {
+  const response = await request
+    .get('/notifications/notify')
+    .use(prefix(sails.config.custom.subscriptionServer));
+
+  console.log(response);
+});
+
+sails.on('notification:created', async (model) => {
+  const response = await request
+    .get('/notifications/notify')
+    .use(prefix(sails.config.custom.subscriptionServer));
+
+  console.log(response);
+});
