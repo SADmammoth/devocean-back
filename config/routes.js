@@ -458,6 +458,23 @@ module.exports.routes = {
       },
     },
   },
+  'get /tasks/:id/history': {
+    action: 'comments/history/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/history',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 
   'get /dev/backup': {
     action: 'dev/backup/get',
