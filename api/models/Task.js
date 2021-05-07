@@ -63,3 +63,18 @@ sails.on('task:updated', async ({ change, diff }) => {
     after: diff,
   });
 });
+
+sails.on('task:updated', async ({ change, diff }) => {
+  const isEstimateSet = !!diff.estimate;
+
+  if (isEstimateSet) {
+    const report = await Report.create({
+      task: change.id,
+      author: (await Teammate.find())[0].id,
+      time: new Date(),
+      reportedTime: 0,
+      estimate: diff.estimate,
+      activity: '$estimate',
+    });
+  }
+});

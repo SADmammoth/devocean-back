@@ -476,6 +476,42 @@ module.exports.routes = {
     },
   },
 
+  'get /tasks/:id/reports': {
+    action: 'comments/reports/get',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/reports',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /tasks/:id/reports': {
+    action: 'comments/reports/post',
+    swagger: {
+      responses: {
+        '200': {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/reports',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'get /dev/backup': {
     action: 'dev/backup/get',
     swagger: {

@@ -82,13 +82,13 @@ module.exports = {
       }
     );
 
+    const query = () => Task.findOne({ id: task.id });
+
     if (!teammate || teammate !== task.teammate) {
-      return task;
+      return await sails.helpers.populateFullTask(query);
     }
 
     await sails.helpers.assignTask(task.id, teammate.id, new Date());
-
-    const query = () => Task.findOne({ id: task.id });
 
     return await sails.helpers.populateFullTask(query);
   },

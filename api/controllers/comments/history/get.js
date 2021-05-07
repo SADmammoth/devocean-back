@@ -6,7 +6,7 @@ module.exports = {
   inputs: {
     id: {
       type: 'string',
-      meta: { swagger: { in: 'body' } },
+      meta: { swagger: { in: 'path' } },
     },
   },
 
