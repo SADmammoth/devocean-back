@@ -44,6 +44,7 @@ module.exports = {
     },
     template: {
       type: 'string',
+      defaultsTo: 'No template',
       meta: { swagger: { in: 'body' } },
     },
     customFields: {
@@ -71,7 +72,7 @@ module.exports = {
     });
 
     const foundTemplate = await Template.findOne({
-      name: template || 'No template',
+      or: [{ name: template }, { id: template }],
     });
 
     const task = await Task.create({
@@ -86,13 +87,13 @@ module.exports = {
       customFields,
     }).fetch();
 
+    const query = () => Task.findOne({ id: task.id });
+
     if (!teammate) {
-      return task;
+      return await sails.helpers.populateFullTask(query);
     }
 
-    await sails.helpers.assignTask(task.id, teammate.id, new Date());
-
-    const query = () => Task.findOne({ id: task.id });
+    await sails.helpers.assignTask(task.id, teammate, new Date());
 
     return await sails.helpers.populateFullTask(query);
   },

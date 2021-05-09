@@ -17,11 +17,12 @@ module.exports = {
     const task = await query()
       .populate('list')
       .populate('status')
-      .populate('assignee');
+      .populate('assignee')
+      .populate('template');
 
     if (!task) {
       return;
-    }
+    } 
 
     const {
       id,

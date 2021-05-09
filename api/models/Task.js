@@ -2,6 +2,8 @@ const _ = require('@sailshq/lodash');
 const Duration = require('../types/Duration');
 const DynamicDuration = require('../types/DynamicDuration');
 const priority = require('../types/enums/priority');
+const prefix = require('superagent-prefix');
+const request = require('superagent');
 
 module.exports = {
   attributes: {
@@ -77,4 +79,21 @@ sails.on('task:updated', async ({ change, diff }) => {
       activity: '$estimate',
     });
   }
+});
+
+
+sails.on('task:updated',({ changes: model }) => {
+  
+  request
+    .get('/tasks/notify')
+    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
+
+});
+
+sails.on('task:created', (model) => {
+  
+request
+    .get('/tasks/notify')
+    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
+
 });

@@ -17,7 +17,8 @@ module.exports = {
     const tasks = await query()
       .populate('list')
       .populate('status')
-      .populate('assignee');
+      .populate('assignee')
+      .populate('template');
 
     return await Promise.all(
       tasks.map(async (task) => await sails.helpers.mapShortTask(task))

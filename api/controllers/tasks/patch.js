@@ -80,7 +80,7 @@ module.exports = {
         timeInStatus: foundStatus ? new Date() : undefined,
         description,
       }
-    );
+    ).fetch();
 
     const query = () => Task.findOne({ id: task.id });
 

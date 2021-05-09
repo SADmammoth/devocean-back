@@ -60,6 +60,25 @@ module.exports.custom = {
           },
         ],
       },
+      {
+        name: 'Event',
+        fields: [
+          {
+            id: 'date',
+            name: 'date',
+            type: 'text',
+            label: 'Event date',
+            validator: 'dateTimeByCharWithInvisibleMask',
+            converters: 'dateTime',
+          },
+          {
+            id: 'location',
+            name: 'location',
+            type: 'text',
+            label: 'Location of event',
+          },
+        ],
+      },
     ],
 
     typesFromTemplateToAttribute: {
