@@ -25,7 +25,7 @@ module.exports.policies = {
   'tasks/patch': 'features/manageTasks',
   'tasks/post': 'features/manageTasks',
   'tasks/set-status': 'features/workWithTasks',
-  'tasks/addToList': 'features/manageCollections',
+  'tasks/add-to-list': 'features/manageCollections',
 
   'templates/*': 'features/viewTasks',
   'statuses/*': 'features/viewTasks',

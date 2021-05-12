@@ -103,7 +103,7 @@ module.exports.custom = {
             _.isArray(value) &&
             _.difference(
               value,
-              valueOptions.map(({ value }) => value)
+              valueOptions.map(({ value }) => value),
             ).length() === 0
           );
         },
@@ -121,12 +121,54 @@ module.exports.custom = {
             _.isArray(value) &&
             _.difference(
               value,
-              valueOptions.map(({ value }) => value)
+              valueOptions.map(({ value }) => value),
             ).length() === 0
           );
         },
       }),
     },
+  },
+  navItems: {
+    items: [
+      {
+        label: 'Manage tasks',
+        shortLabel: 'Tasks',
+        featureAccess: 'manageTasks',
+        link: '/tasks',
+      },
+      {
+        label: 'Work with tasks',
+        shortLabel: 'Tasks',
+        featureAccess: 'workWithTasks',
+        link: '/tasks',
+      },
+      {
+        label: 'View tasks',
+        shortLabel: 'Tasks',
+        featureAccess: 'viewTasks',
+        link: '/tasks',
+      },
+      {
+        label: 'View notifications',
+        shortLabel: 'Notifications',
+        featureAccess: 'viewNotifications',
+        link: '/notifications',
+        onlyShort: true,
+      },
+      {
+        label: 'Manage notifications',
+        shortLabel: 'Notifications',
+        featureAccess: 'manageNotifications',
+        link: '/notifications',
+        onlyShort: true,
+      },
+      {
+        label: 'Manage documentation',
+        shortLabel: 'Documents',
+        featureAccess: 'all',
+        link: '/docs',
+      },
+    ],
   },
   subscriptionServer: 'http://localhost:1338',
   authenticationServer: 'http://localhost:1339',

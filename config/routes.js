@@ -605,6 +605,17 @@ module.exports.routes = {
     },
   },
 
+  'get /navItems': {
+    action: 'nav-items/get',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************

@@ -56,4 +56,8 @@ module.exports.bootstrap = async function () {
   if ((await Template.count()) === 0) {
     await Template.createEach(sails.config.custom.templates.items);
   }
+
+  if ((await NavItem.count()) === 0) {
+    await NavItem.createEach(sails.config.custom.navItems.items);
+  }
 };
