@@ -7,8 +7,8 @@ module.exports = {
 
   exits: {},
 
-  fn: async function (inputs) {
-    // All done.
-    return;
+  fn: async function () {
+    const document = await Document.find().populate('contributors');
+    return document;
   },
 };

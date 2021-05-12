@@ -572,6 +572,17 @@ module.exports.routes = {
     },
   },
 
+  'get /docs': {
+    action: 'documents/get',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
   'get /docs/:id': {
     action: 'documents/get-by-id',
     swagger: {

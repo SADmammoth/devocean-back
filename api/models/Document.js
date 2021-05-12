@@ -8,6 +8,9 @@ module.exports = {
       model: 'teammate',
       //TODO required
     },
+    abstract: {
+      type: "string"
+    },
     contributors: {
       collection: 'teammate',
     },
