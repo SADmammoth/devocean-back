@@ -35,7 +35,7 @@ module.exports.routes = {
     action: 'folders/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -54,7 +54,7 @@ module.exports.routes = {
     action: 'folders/get-by-id',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -70,7 +70,7 @@ module.exports.routes = {
     action: 'folders/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -86,7 +86,7 @@ module.exports.routes = {
     action: 'folders/patch',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -102,7 +102,7 @@ module.exports.routes = {
     action: 'tasks/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -121,7 +121,7 @@ module.exports.routes = {
     action: 'tasks/get-by-id',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -137,7 +137,7 @@ module.exports.routes = {
     action: 'tasks/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -153,7 +153,7 @@ module.exports.routes = {
     action: 'tasks/patch',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -169,7 +169,7 @@ module.exports.routes = {
     action: 'tasks/delete',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -185,7 +185,7 @@ module.exports.routes = {
     action: 'tasks/assign',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -201,7 +201,7 @@ module.exports.routes = {
     action: 'tasks/set-status',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -217,7 +217,7 @@ module.exports.routes = {
     action: 'tasks/add-to-list',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -233,7 +233,7 @@ module.exports.routes = {
     action: 'teammates/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -249,7 +249,7 @@ module.exports.routes = {
     action: 'statuses/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -267,7 +267,7 @@ module.exports.routes = {
     action: 'statuses/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -283,7 +283,7 @@ module.exports.routes = {
     action: 'notifications/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -302,7 +302,7 @@ module.exports.routes = {
     action: 'notifications/get-by-id',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -318,7 +318,7 @@ module.exports.routes = {
     action: 'notifications/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -334,7 +334,7 @@ module.exports.routes = {
     action: 'notifications/receive',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -353,7 +353,7 @@ module.exports.routes = {
     action: 'notifications/cancel',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -371,7 +371,7 @@ module.exports.routes = {
     action: 'notifications/patch',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -389,7 +389,7 @@ module.exports.routes = {
     action: 'templates/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -407,7 +407,7 @@ module.exports.routes = {
     action: 'templates/get-by-id',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -425,7 +425,7 @@ module.exports.routes = {
     action: 'comments/discussions/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -443,7 +443,7 @@ module.exports.routes = {
     action: 'comments/discussions/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -461,7 +461,7 @@ module.exports.routes = {
     action: 'comments/status-changes/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -478,7 +478,7 @@ module.exports.routes = {
     action: 'comments/history/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -496,7 +496,7 @@ module.exports.routes = {
     action: 'comments/reports/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -514,7 +514,7 @@ module.exports.routes = {
     action: 'comments/reports/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
           content: {
             'application/json': {
@@ -532,7 +532,7 @@ module.exports.routes = {
     action: 'dev/backup/get',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
         },
       },
@@ -543,7 +543,7 @@ module.exports.routes = {
     action: 'dev/backup/post',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
         },
       },
@@ -554,7 +554,7 @@ module.exports.routes = {
     action: 'dev/faker/task',
     swagger: {
       responses: {
-        '200': {
+        200: {
           description: 'The requested resource',
         },
       },
@@ -565,7 +565,29 @@ module.exports.routes = {
     action: 'dev/faker/notification',
     swagger: {
       responses: {
-        '200': {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'get /docs/:id': {
+    action: 'documents/get-by-id',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /docs': {
+    action: 'documents/post',
+    swagger: {
+      responses: {
+        200: {
           description: 'The requested resource',
         },
       },

@@ -8,10 +8,10 @@ module.exports = async function (req, res, proceed) {
     return res.forbidden();
   }
 
-  request
+  await request
     .post('/checkToken')
     .use(authApi)
-    .send({ token: req.headers.authorization.replace('bearer ', '') })
+    .send({ token: req.headers.authorization.replace('Bearer ', '') })
     .catch(() => res.forbidden())
     .then(() => {
       return proceed();

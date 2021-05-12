@@ -50,4 +50,6 @@ module.exports.policies = {
   'comments/status-changes/*': 'features/viewTasks',
 
   'dev/*': true,
+
+  // 'documents/*': 'auth',
 };
