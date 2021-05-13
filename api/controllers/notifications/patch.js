@@ -10,10 +10,6 @@ module.exports = {
       meta: { swagger: { in: 'body' } },
     },
     time: { type: 'string', meta: { swagger: { in: 'body' } } },
-    author: {
-      type: 'string',
-      meta: { swagger: { in: 'body' } },
-    },
     fullText: { type: 'string', meta: { swagger: { in: 'body' } } },
   },
 
@@ -25,7 +21,7 @@ module.exports = {
     badRequest: { responseType: 'badRequest' },
   },
 
-  fn: async function ({ id, title, time, author, fullText }) {
+  fn: async function ({ id, title, time, fullText }) {
     const notification = await Notification.findOne({ id });
 
     if (!notification) {
@@ -55,10 +51,9 @@ module.exports = {
       {
         title,
         time,
-        author,
         fullText,
         status,
-      }
+      },
     );
 
     return newNotification;

@@ -28,6 +28,15 @@ module.exports = {
     if (!task) {
       return 'notFound';
     }
+
+    let { teammateId: author, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!author) author = login;
+
+    await Task.addToCollection(id, 'contributors').members([author]);
+
     const query = () => Task.findOne({ id: task.id });
 
     return await sails.helpers.populateFullTask(query);

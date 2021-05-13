@@ -44,6 +44,10 @@ module.exports = {
       type: 'json',
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
   exits: {},
@@ -58,6 +62,7 @@ module.exports = {
     status,
     teammate,
     description,
+    authorization,
   }) {
     const foundStatus = status
       ? await Status.findOne({ name: status })
@@ -67,6 +72,16 @@ module.exports = {
           or: [{ name: list }, { id: list }],
         })
       : undefined;
+
+    let { teammateId: author, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!author) author = login;
+
+    const result = await Task.addToCollection(id, 'contributors').members([
+      author,
+    ]);
 
     const task = await Task.updateOne(
       { id },
@@ -79,7 +94,7 @@ module.exports = {
         status: foundStatus?.id,
         timeInStatus: foundStatus ? new Date() : undefined,
         description,
-      }
+      },
     ).fetch();
 
     const query = () => Task.findOne({ id: task.id });

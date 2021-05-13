@@ -8,12 +8,6 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'path' } },
     },
-    time: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
-    author: {
-      type: 'string',
-      required: true,
-      meta: { swagger: { in: 'body' } },
-    },
     reportedTime: {
       type: 'number',
       required: true,
@@ -25,15 +19,28 @@ module.exports = {
     },
   },
 
-  exits: {},
+  exits: {
+    badRequest: {
+      responseType: 'badRequest',
+    },
+  },
 
-  fn: async function ({ id, time, author, reportedTime, activity }) {
+  fn: async function ({ id, reportedTime, activity }) {
     const task = await Task.findOne({ id });
+
+    if (!task) {
+      throw 'badRequest';
+    }
+
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
 
     const report = await Report.create({
       task: id,
-      time,
-      author,
+      author: teammateId,
       estimate: task.estimate,
       reportedTime,
       activity,
@@ -41,7 +48,7 @@ module.exports = {
 
     await Task.updateOne(
       { id },
-      { reportedTime: (task.reportedTime || 0) + reportedTime }
+      { reportedTime: (task.reportedTime || 0) + reportedTime },
     );
 
     return report;

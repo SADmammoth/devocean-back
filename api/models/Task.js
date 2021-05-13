@@ -32,13 +32,23 @@ module.exports = {
     assignee: { model: 'assignee' },
     template: { model: 'template', required: true },
     customFields: { type: 'json', required: true },
+    author: {
+      model: 'teammate',
+      required: true,
+    },
+    contributors: {
+      collection: 'teammate',
+    },
   },
 };
 
 sails.on('task:created', async ({ change }) => {
+  const task = await Task.findOne({ id: change.id }).populate('contributors');
   return await History.create({
     time: new Date(),
-    author: (await Teammate.find())[0].id,
+    author: !task.contributors
+      ? change.author
+      : task.contributors.slice(-1)[0].id,
     task: change.id,
     changedFields: Object.keys(change),
     after: change,
@@ -46,6 +56,8 @@ sails.on('task:created', async ({ change }) => {
 });
 
 sails.on('task:updated', async ({ change, diff }) => {
+  const task = await Task.findOne({ id: change.id }).populate('contributors');
+
   const lastChange = await History.find({
     where: { changedFields: Object.keys(diff) },
     sort: [{ updatedAt: 'DESC' }],
@@ -54,13 +66,13 @@ sails.on('task:updated', async ({ change, diff }) => {
 
   return await History.create({
     time: new Date(),
-    author: (await Teammate.find())[0].id,
+    author: task.contributors.slice(-1)[0].id,
     task: change.id,
     changedFields: Object.keys(diff),
     before: Object.fromEntries(
       Object.entries(diff).map(([key, value]) => {
         return [key, lastChange[0].after[key]];
-      })
+      }),
     ),
     after: diff,
   });
@@ -68,11 +80,12 @@ sails.on('task:updated', async ({ change, diff }) => {
 
 sails.on('task:updated', async ({ change, diff }) => {
   const isEstimateSet = !!diff.estimate;
+  const task = await Task.findOne({ id: change.id }).populate('contributors');
 
   if (isEstimateSet) {
     const report = await Report.create({
       task: change.id,
-      author: (await Teammate.find())[0].id,
+      author: task.contributors.slice(-1)[0].id,
       time: new Date(),
       reportedTime: 0,
       estimate: diff.estimate,
@@ -81,19 +94,16 @@ sails.on('task:updated', async ({ change, diff }) => {
   }
 });
 
-
-sails.on('task:updated',({ changes: model }) => {
-  
+sails.on('task:updated', ({ changes: model }) => {
   request
     .get('/tasks/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });
 
 sails.on('task:created', (model) => {
-  
-request
+  request
     .get('/tasks/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });

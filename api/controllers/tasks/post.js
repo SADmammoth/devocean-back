@@ -51,6 +51,10 @@ module.exports = {
       type: 'json',
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
   exits: {},
@@ -65,36 +69,19 @@ module.exports = {
     teammate,
     template,
     customFields,
+    authorization,
   }) {
-    const foundStatus = await Status.findOne({ name: status });
-    const foundList = await TaskCollection.findOne({
-      or: [{ name: list }, { id: list }],
-    });
-
-    const foundTemplate = await Template.findOne({
-      or: [{ name: template }, { id: template }],
-    });
-
-    const task = await Task.create({
+    return await sails.helpers.actions.postTask(
       title,
       priority,
       estimate,
       reportedTime,
-      list: foundList.id,
-      status: foundStatus.id,
-      timeInStatus: new Date(),
-      template: foundTemplate.id,
+      list,
+      status,
+      teammate,
+      template,
       customFields,
-    }).fetch();
-
-    const query = () => Task.findOne({ id: task.id });
-
-    if (!teammate) {
-      return await sails.helpers.populateFullTask(query);
-    }
-
-    await sails.helpers.assignTask(task.id, teammate, new Date());
-
-    return await sails.helpers.populateFullTask(query);
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
   },
 };

@@ -61,12 +61,20 @@ module.exports = {
       {
         status: foundStatus.id,
         timeInStatus: assignedDate ? new Date(assignedDate) : new Date(),
-      }
+      },
     );
 
     if (!updatedTask) {
       throw 'notFound';
     }
+
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
+
+    await Task.addToCollection(id, 'contributors').members([teammateId]);
 
     const query = () => Task.findOne({ id: updatedTask.id });
 

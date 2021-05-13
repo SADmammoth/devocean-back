@@ -15,6 +15,6 @@ module.exports = {
 
   fn: async function ({ id }) {
     const document = await Document.findOne({ id }).populate('contributors');
-    return document;
+    return await sails.helpers.populateDocumentWithAuthor(document);
   },
 };

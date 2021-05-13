@@ -44,6 +44,11 @@ module.exports = {
     customFields: {
       type: 'json',
     },
+
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
   exits: {},
@@ -60,6 +65,7 @@ module.exports = {
     teammate,
     template,
     customFields,
+    authorization,
   }) {
     let task;
     const tasks = await Promise.all(
@@ -86,8 +92,11 @@ module.exports = {
           customFields: customFields || {},
         };
 
-        return await sails.helpers.actions.postTask.with(task);
-      })
+        return await sails.helpers.actions.postTask.with({
+          ...task,
+          authorization,
+        });
+      }),
     );
 
     return tasks;

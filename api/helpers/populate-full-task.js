@@ -18,11 +18,12 @@ module.exports = {
       .populate('list')
       .populate('status')
       .populate('assignee')
-      .populate('template');
+      .populate('template')
+      .populate('contributors');
 
     if (!task) {
       return;
-    } 
+    }
 
     const {
       id,
@@ -30,6 +31,7 @@ module.exports = {
       list,
       status: { name: statusName },
       timeInStatus,
+      author: authorId,
       ...rest
     } = task;
 
@@ -41,12 +43,15 @@ module.exports = {
     let teammate;
     if (assignee) teammate = await sails.helpers.assigneeToTeammate(assignee);
 
+    const author = await Teammate.findOne({ id: authorId });
+
     return {
       id,
       assignee: teammate,
       list: list.id,
       tag,
       status: { name: statusName, timeInStatus },
+      author,
       ...rest,
     };
   },

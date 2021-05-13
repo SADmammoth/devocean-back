@@ -8,7 +8,7 @@ module.exports = async function (req, res, proceed) {
     .get('/access/feature')
     .use(authApi)
     .query({ feature: 'manageNotifications' })
-    .set('Authorization', req.headers.authorization)
+    .set('Authorization', req.query.authorization || req.headers.authorization)
     .catch(() => res.forbidden())
     .then(({ body, statusCode }) => {
       if (statusCode !== 200) return res.forbidden();

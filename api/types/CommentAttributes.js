@@ -5,8 +5,8 @@ module.exports = {
     model: 'teammate',
   },
   time: {
-    ...Date,
-    required: true,
+    type: 'number',
+    autoCreatedAt: true,
   },
   task: {
     model: 'task',

@@ -8,7 +8,12 @@ module.exports = {
   exits: {},
 
   fn: async function () {
-    const document = await Document.find().populate('contributors');
-    return document;
+    const documents = await Document.find().populate('contributors');
+    return await Promise.all(
+      documents.map(
+        async (document) =>
+          await sails.helpers.populateDocumentWithAuthor(document),
+      ),
+    );
   },
 };

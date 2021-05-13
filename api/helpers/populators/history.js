@@ -16,7 +16,9 @@ module.exports = {
   fn: async function ({ history }) {
     const { status, timeInStatus, ...rest } = history;
     return {
-      status: (await sails.helpers.populators.status(status.toString())).name,
+      status: status
+        ? (await sails.helpers.populators.status(status.toString())).name
+        : undefined,
       ...rest,
     };
   },

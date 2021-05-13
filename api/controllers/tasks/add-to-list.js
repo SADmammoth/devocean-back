@@ -19,7 +19,17 @@ module.exports = {
     const foundList = await TaskCollection.findOne({
       or: [{ id: list }, { name: list }],
     });
+
     const task = await Task.updateOne({ id }, { list: foundList.id });
+
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
+
+    await Task.addToCollection(id, 'contributors').members([teammateId]);
+
     return task;
   },
 };

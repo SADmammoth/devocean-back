@@ -9,12 +9,6 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'path' } },
     },
-    time: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
-    author: {
-      type: 'string',
-      required: true,
-      meta: { swagger: { in: 'body' } },
-    },
     text: {
       type: 'string',
       required: true,
@@ -24,12 +18,17 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ id, author, time, text }) {
+  fn: async function ({ id, text }) {
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
+
     const discussion = await Discussions.create({
       task: id,
-      time,
       text,
-      author,
+      author: teammateId,
     }).fetch();
 
     return discussion;

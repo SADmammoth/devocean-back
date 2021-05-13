@@ -9,23 +9,29 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'body' } },
     },
-    author: {
-      type: 'string',
-      meta: { swagger: { in: 'body' } },
-    },
     title: {
       type: 'string',
       required: true,
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
   exits: {},
 
-  fn: async function ({ content, author, title }) {
+  fn: async function ({ content, title, authorization }) {
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
+
     const documents = await Document.create({
       content,
-      author,
+      author: teammateId,
       title,
     }).fetch();
     return documents;

@@ -20,11 +20,17 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ title, time, author, fullText }) {
+  fn: async function ({ title, time, fullText }) {
+    let { teammateId, login } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    if (!teammateId) teammateId = login;
+
     const notification = await Notification.create({
       title,
       time: time ? new Date(time) : new Date(),
-      author,
+      author: teammateId,
       fullText,
     }).fetch();
     return notification;

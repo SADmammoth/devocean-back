@@ -8,6 +8,11 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'path' } },
     },
+
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
   exits: {},
@@ -25,7 +30,7 @@ module.exports = {
           after: await sails.helpers.populators.history(after),
           ...rest,
         };
-      })
+      }),
     );
   },
 };
