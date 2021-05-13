@@ -245,6 +245,54 @@ module.exports.routes = {
     },
   },
 
+  'get /teammates/profiles': {
+    action: 'teammates/get-profiles',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /teammates/profiles/:id': {
+    action: 'teammates/get-profile-by-id',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /teammates': {
+    action: 'teammates/post',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'get /statuses': {
     action: 'statuses/get',
     swagger: {
@@ -563,6 +611,17 @@ module.exports.routes = {
 
   'post /dev/faker/notification': {
     action: 'dev/faker/notification',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /dev/faker/teammate': {
+    action: 'dev/faker/teammate',
     swagger: {
       responses: {
         200: {

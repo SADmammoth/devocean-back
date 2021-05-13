@@ -1,1 +1,1 @@
-module.exports = ['he', 'she'];
+module.exports = ['he', 'she', 'they'];

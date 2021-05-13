@@ -3,12 +3,18 @@ module.exports = {
 
   description: 'Get teammates.',
 
-  inputs: {},
+  inputs: {
+    authorization: {
+      type: 'string',
+    },
+  },
 
   exits: {},
 
   fn: async function () {
-    const teammates = await Teammate.find().populate('assignedTasks');
+    const teammates = await Teammate.find({
+      select: ['name', 'lastName', 'avatar'],
+    }).populate('assignedTasks');
     let assignees;
     let assignedTasks;
     return await Promise.all(
@@ -19,17 +25,17 @@ module.exports = {
         }
 
         assignees = await sails.helpers.filterCurrentAssignee(
-          teammate.assignedTasks
+          teammate.assignedTasks,
         );
 
         assignedTasks = await Promise.all(
           assignees.map((assignee) =>
-            sails.helpers.assigneeToAssignedTask(assignee)
-          )
+            sails.helpers.assigneeToAssignedTask(assignee),
+          ),
         );
 
         return { ...teammate, assignedTasks };
-      })
+      }),
     );
   },
 };

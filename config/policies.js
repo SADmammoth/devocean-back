@@ -52,4 +52,5 @@ module.exports.policies = {
   'dev/*': true,
 
   // 'documents/*': 'auth',
+  // 'teammates/*': 'auth',
 };

@@ -4,7 +4,7 @@ const prefix = require('superagent-prefix');
 const authApi = prefix(sails.config.custom.authenticationServer);
 
 module.exports = async function (req, res, proceed) {
-  if (!req.headers.authorization && req.query.authorization) {
+  if (!req.headers.authorization && !req.query.authorization) {
     return res.forbidden();
   }
 
@@ -13,7 +13,7 @@ module.exports = async function (req, res, proceed) {
       req.query.authorization ||
         req.headers.authorization.replace('Bearer ', ''),
     )
-    .catch(() => res.forbidden())
+    .catch(() => res.forbidden('Credentials are not valid'))
     .then(() => {
       return proceed();
     });
