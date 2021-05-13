@@ -605,6 +605,17 @@ module.exports.routes = {
     },
   },
 
+  'patch /docs/:id': {
+    action: 'documents/patch',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
   'get /navItems': {
     action: 'nav-items/get',
     swagger: {
