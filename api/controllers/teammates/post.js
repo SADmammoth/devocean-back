@@ -59,6 +59,10 @@ module.exports = {
       //   required: true,
       //TODO
     },
+
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},

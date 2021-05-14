@@ -16,7 +16,10 @@ module.exports = {
   exits: {},
 
   fn: async function ({ id }) {
-    const teammate = await Teammate.find({ id }).populate('subteams', 'tags');
+    const teammate = await Teammate.findOne({ id }).populate(
+      'subteams',
+      'tags',
+    );
 
     return await sails.helpers.populators.teammateFullProfile(teammate);
   },

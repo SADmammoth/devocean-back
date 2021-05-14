@@ -17,9 +17,29 @@ module.exports = {
   },
 
   fn: async function ({ teammate }) {
-    const { id, name, lastName, avatar, referAs, subteams, tags } = teammate;
+    const {
+      id,
+      name,
+      lastName,
+      avatar,
+      referAs,
+      subteams,
+      tags,
 
-    const status = 'working'; //TODO
+      workHours,
+      workHoursStart,
+      workHoursEnd,
+      workDays,
+    } = teammate;
+
+    const status = sails.helpers.getTeammateActiveStatus(
+      workHours,
+      workHoursStart,
+      workHoursEnd,
+      workDays,
+    )
+      ? 'working'
+      : 'not working';
     const actualStatus = 'online'; //TODO
 
     return {

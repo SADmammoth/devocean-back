@@ -9,7 +9,6 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'path' } },
     },
-    time: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
     author: {
       type: 'string',
       // required: true,
@@ -36,7 +35,6 @@ module.exports = {
   fn: async function ({ id, time, author, fromStatus, toStatus, text }) {
     const statusChange = await StatusChange.create({
       task: id,
-      time,
       author: (await Teammate.find({}))[0].id, // FIXME
       fromStatus,
       toStatus,

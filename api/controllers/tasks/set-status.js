@@ -26,11 +26,18 @@ module.exports = {
     author: {
       type: 'string',
     },
+
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ id, status, assignedDate, text, author }, res) {
+  fn: async function (
+    { id, status, assignedDate, text, author, authorization },
+    res,
+  ) {
     const foundStatus = await Status.findOne({
       or: [
         {

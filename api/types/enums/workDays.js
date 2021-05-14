@@ -1,1 +1,1 @@
-module.exports = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+module.exports = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
