@@ -8,6 +8,9 @@ module.exports = {
       type: 'ref',
       required: true,
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -16,11 +19,14 @@ module.exports = {
     },
   },
 
-  fn: async function ({ teammates }) {
+  fn: async function ({ teammates, authorization }) {
     return await Promise.all(
       teammates.map(
         async (teammate) =>
-          await sails.helpers.populators.teammateProfile(teammate),
+          await sails.helpers.populators.teammateProfile(
+            teammate,
+            authorization,
+          ),
       ),
     );
   },

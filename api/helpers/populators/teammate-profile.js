@@ -8,6 +8,9 @@ module.exports = {
       type: 'ref',
       required: true,
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -16,7 +19,7 @@ module.exports = {
     },
   },
 
-  fn: async function ({ teammate }) {
+  fn: async function ({ teammate, authorization }) {
     const {
       id,
       name,
@@ -40,7 +43,10 @@ module.exports = {
     )
       ? 'working'
       : 'not working';
-    const actualStatus = 'online'; //TODO
+    const actualStatus = await sails.helpers.getTeammateActualStatus(
+      id,
+      authorization,
+    );
 
     return {
       id,
