@@ -12,6 +12,12 @@ module.exports = {
   inputs: {
     name: { type: 'string', required: true },
     lastName: { type: 'string', required: true },
+    shortName: {
+      type: 'string',
+    },
+    joinedAt: {
+      type: 'string',
+    },
     referAs: { type: 'string', required: true },
     avatar: { type: 'string' },
     // subteams: {
@@ -100,6 +106,8 @@ module.exports = {
       aboutYourself,
       contacts,
       email,
+      shortName: shortName || name,
+      joinedAt,
     }).fetch();
 
     if (!temporaryPassword) temporaryPassword = sails.helpers.faker.password();

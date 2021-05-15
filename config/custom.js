@@ -168,6 +168,12 @@ module.exports.custom = {
         featureAccess: 'all',
         link: '/docs',
       },
+      {
+        label: 'Manage team',
+        shortLabel: 'Team',
+        featureAccess: 'all',
+        link: '/teammates',
+      },
     ],
   },
   subscriptionServer: 'http://localhost:1338',

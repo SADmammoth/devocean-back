@@ -24,14 +24,10 @@ sails.on('notification:updated', async ({ changes: model }) => {
   const response = await request
     .get('/notifications/notify')
     .use(prefix(sails.config.custom.subscriptionServer));
-
-  console.log(response);
 });
 
 sails.on('notification:created', async (model) => {
   const response = await request
     .get('/notifications/notify')
     .use(prefix(sails.config.custom.subscriptionServer));
-
-  console.log(response);
 });

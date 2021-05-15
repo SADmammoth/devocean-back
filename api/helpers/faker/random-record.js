@@ -31,7 +31,7 @@ module.exports = {
     if (addUndefined) {
       items.push({});
     }
-    console.log(items);
+
     return random.arrayElement(items);
   },
 };

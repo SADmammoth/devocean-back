@@ -10,7 +10,6 @@
  */
 
 module.exports.bootstrap = async function () {
-  console.log(await Status.count());
   if ((await Status.count()) === 0) {
     await Status.createEach([
       {

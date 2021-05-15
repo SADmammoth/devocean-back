@@ -15,12 +15,15 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ id }) {
+  fn: async function ({ id, authorization }) {
     const teammate = await Teammate.findOne({ id }).populate(
       'subteams',
       'tags',
     );
 
-    return await sails.helpers.populators.teammateFullProfile(teammate);
+    return await sails.helpers.populators.teammateFullProfile(
+      teammate,
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
   },
 };

@@ -13,7 +13,7 @@ module.exports = {
 
   fn: async function () {
     const teammates = await Teammate.find({
-      select: ['name', 'lastName', 'avatar'],
+      select: ['name', 'lastName', 'shortName', 'avatar'],
     }).populate('assignedTasks');
     let assignees;
     let assignedTasks;

@@ -11,6 +11,10 @@ module.exports = {
   attributes: {
     name: { type: 'string', required: true },
     lastName: { type: 'string', required: true },
+    shortName: {
+      type: 'string',
+    },
+    joinedAt: { type: 'number', autoCreatedAt: true },
     referAs: { type: 'string', isIn: referAs, required: true },
     avatar: { type: 'string', isURL: true },
     createdNotifications: { collection: 'notification', via: 'author' },

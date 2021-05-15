@@ -17,7 +17,7 @@ module.exports = {
     const { teammate: id, assignedDate } = assignee;
     const teammate = await Teammate.findOne({
       where: { id },
-      select: ['id', 'name', 'lastName'],
+      select: ['id', 'name', 'lastName', 'shortName', 'avatar'],
     });
 
     return { ...teammate, assignedDate };

@@ -23,8 +23,6 @@ module.exports = {
       }
     });
 
-    console.log(updateValue);
-
     return updateValue;
   },
 };

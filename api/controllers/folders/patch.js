@@ -37,7 +37,6 @@ module.exports = {
       tag: tag || folder.tag,
     });
 
-    console.log(folder, tag);
     if (!typeByFields) {
       throw {
         badRequest: {
@@ -70,7 +69,7 @@ module.exports = {
         name,
         parent: parentFolder.id,
         tag: tagToSaveId,
-      }
+      },
     );
 
     return updatedFolder;
