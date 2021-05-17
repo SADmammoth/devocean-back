@@ -63,6 +63,7 @@ module.exports = {
     teammate,
     description,
     authorization,
+    customFields,
   }) {
     const foundStatus = status
       ? await Status.findOne({ name: status })
@@ -94,6 +95,7 @@ module.exports = {
         status: foundStatus?.id,
         timeInStatus: foundStatus ? new Date() : undefined,
         description,
+        customFields,
       },
     ).fetch();
 

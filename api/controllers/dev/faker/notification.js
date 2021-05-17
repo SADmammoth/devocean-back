@@ -19,6 +19,9 @@ module.exports = {
       type: 'string',
     },
     fullText: { type: 'string' },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
@@ -36,7 +39,7 @@ module.exports = {
         };
 
         return await sails.helpers.actions.postNotification.with(notification);
-      })
+      }),
     );
 
     return notifications;

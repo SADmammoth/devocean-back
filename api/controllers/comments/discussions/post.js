@@ -14,11 +14,14 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ id, text }) {
+  fn: async function ({ id, text, authorization }) {
     let { teammateId, login } = await sails.helpers.requestUserData(
       authorization || this.req.headers.authorization.replace('Bearer ', ''),
     );

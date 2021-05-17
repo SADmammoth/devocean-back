@@ -64,23 +64,34 @@ sails.on('task:updated', async ({ change, diff }) => {
     select: ['after', 'changedFields'],
   });
 
+  const lastChangeState = Object.fromEntries(
+    Object.entries(diff).map(([key, value]) => {
+      return [key, lastChange[0].after[key]];
+    }),
+  );
+
+  const before = _.difference(lastChangeState, diff);
+  const after = _.difference(diff, lastChangeState);
+
+  if (_.isEmpty(after)) {
+    return;
+  }
+
   return await History.create({
     time: new Date(),
     author: task.contributors.slice(-1)[0].id,
     task: change.id,
-    changedFields: Object.keys(diff),
-    before: Object.fromEntries(
-      Object.entries(diff).map(([key, value]) => {
-        return [key, lastChange[0].after[key]];
-      }),
-    ),
-    after: diff,
+    changedFields: Object.keys(after),
+    before,
+    after,
   });
 });
 
 sails.on('task:updated', async ({ change, diff }) => {
   const isEstimateSet = !!diff.estimate;
   const task = await Task.findOne({ id: change.id }).populate('contributors');
+
+  if (change.estimate === diff.estimate) return;
 
   if (isEstimateSet) {
     const report = await Report.create({
