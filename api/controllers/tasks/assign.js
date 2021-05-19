@@ -19,11 +19,14 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ id, teammateId, assignedDate }) {
+  fn: async function ({ id, teammateId, assignedDate, authorization }) {
     const task = await sails.helpers.assignTask(id, teammateId, assignedDate);
     if (!task) {
       return 'notFound';

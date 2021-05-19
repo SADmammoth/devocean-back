@@ -20,18 +20,16 @@ module.exports = {
   },
 };
 
-sails.on('history:updated',({ changes: model }) => {
-  
+sails.on('history:updated', ({ changes: model }) => {
   request
     .get('/history/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });
 
 sails.on('history:created', (model) => {
-  
-request
+  request
     .get('/history/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });

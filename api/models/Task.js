@@ -59,7 +59,7 @@ sails.on('task:updated', async ({ change, diff }) => {
   const task = await Task.findOne({ id: change.id }).populate('contributors');
 
   const lastChange = await History.find({
-    where: { changedFields: Object.keys(diff) },
+    where: { task: task.id, changedFields: Object.keys(diff) },
     sort: [{ updatedAt: 'DESC' }],
     select: ['after', 'changedFields'],
   });
@@ -70,8 +70,12 @@ sails.on('task:updated', async ({ change, diff }) => {
     }),
   );
 
-  const before = _.difference(lastChangeState, diff);
-  const after = _.difference(diff, lastChangeState);
+  const before = lastChangeState;
+  const after = Object.fromEntries(
+    Object.entries(diff).filter(([key, value]) => {
+      return before[key] !== value;
+    }),
+  );
 
   if (_.isEmpty(after)) {
     return;

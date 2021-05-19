@@ -17,6 +17,9 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -25,7 +28,7 @@ module.exports = {
     },
   },
 
-  fn: async function ({ id, reportedTime, activity }) {
+  fn: async function ({ id, reportedTime, activity, authorization }) {
     const task = await Task.findOne({ id });
 
     if (!task) {

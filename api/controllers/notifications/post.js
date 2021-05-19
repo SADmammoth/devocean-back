@@ -10,17 +10,15 @@ module.exports = {
       meta: { swagger: { in: 'body' } },
     },
     time: { type: 'string', required: true, meta: { swagger: { in: 'body' } } },
-    author: {
-      type: 'string',
-      required: true,
-      meta: { swagger: { in: 'body' } },
-    },
     fullText: { type: 'string', meta: { swagger: { in: 'body' } } },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ title, time, fullText }) {
+  fn: async function ({ title, time, fullText, authorization }) {
     let { teammateId, login } = await sails.helpers.requestUserData(
       authorization || this.req.headers.authorization.replace('Bearer ', ''),
     );

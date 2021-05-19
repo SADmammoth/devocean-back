@@ -38,7 +38,7 @@ module.exports = {
     }
 
     if (
-      new Date(notification.time) <= new Date() ||
+      new Date(notification.time) <= new Date(time) ||
       status === 'send' ||
       status === 'cancelled'
     ) {

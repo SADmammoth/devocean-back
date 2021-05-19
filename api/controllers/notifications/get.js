@@ -16,7 +16,8 @@ module.exports = {
     }
 
     const notifications = await Notification.find({
-      author: teammateId,
+      where: { author: teammateId },
+      sort: [{ time: 'DESC' }],
     }).populate('author');
 
     if (!notifications) {

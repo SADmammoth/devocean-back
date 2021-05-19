@@ -59,4 +59,22 @@ module.exports.bootstrap = async function () {
   if ((await NavItem.count()) === 0) {
     await NavItem.createEach(sails.config.custom.navItems.items);
   }
+
+  if ((await History.count()) === 0) {
+    const tasks = await Task.find();
+    if (tasks)
+      await History.createEach(
+        await Promise.all(
+          tasks.map(async (task) => {
+            return {
+              time: task.createdAt,
+              task: task.id,
+              changedFields: Object.keys(task),
+              before: null,
+              after: tasks.map((task) => _.omit(task, ['id'])),
+            };
+          }),
+        ),
+      );
+  }
 };

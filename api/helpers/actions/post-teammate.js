@@ -75,6 +75,8 @@ module.exports = {
   fn: async function ({
     name,
     lastName,
+    shortName,
+    joinedAt,
     referAs,
     avatar,
     workMode,
