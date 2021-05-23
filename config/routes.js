@@ -293,6 +293,22 @@ module.exports.routes = {
     },
   },
 
+  'patch /teammates/:id': {
+    action: 'teammates/patch',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'get /statuses': {
     action: 'statuses/get',
     swagger: {

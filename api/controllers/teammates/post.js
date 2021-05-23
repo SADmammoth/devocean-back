@@ -7,15 +7,15 @@ module.exports = {
   description: 'Get teammates.',
 
   inputs: {
-    name: { type: 'string', required: true },
-    lastName: { type: 'string', required: true },
+    name: { type: 'string' },
+    lastName: { type: 'string' },
     shortName: {
       type: 'string',
     },
     joinedAt: {
       type: 'string',
     },
-    referAs: { type: 'string', required: true },
+    referAs: { type: 'string' },
     avatar: { type: 'string' },
     // subteams: {
     //   type: 'ref',
@@ -64,6 +64,12 @@ module.exports = {
       type: 'string',
       //   required: true,
       //TODO
+    },
+    hidden: {
+      type: 'boolean',
+    },
+    invited: {
+      type: 'boolean',
     },
 
     authorization: {

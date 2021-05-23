@@ -9,13 +9,16 @@ const workDays = require('../types/enums/workDays');
 
 module.exports = {
   attributes: {
-    name: { type: 'string', required: true },
-    lastName: { type: 'string', required: true },
+    hidden: {
+      type: 'boolean',
+    },
+    name: { type: 'string' },
+    lastName: { type: 'string' },
     shortName: {
       type: 'string',
     },
     joinedAt: { type: 'number', autoCreatedAt: true },
-    referAs: { type: 'string', isIn: referAs, required: true },
+    referAs: { type: 'string', isIn: referAs },
     avatar: { type: 'string', isURL: true },
     createdNotifications: { collection: 'notification', via: 'author' },
     assignedTasks: { collection: 'assignee', via: 'teammate' },

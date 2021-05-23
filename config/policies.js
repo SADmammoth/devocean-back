@@ -1,21 +1,4 @@
-/**
- * Policy Mappings
- * (sails.config.policies)
- *
- * Policies are simple functions which run **before** your actions.
- *
- * For more information on configuring policies, check out:
- * https://sailsjs.com/docs/concepts/policies
- */
-
 module.exports.policies = {
-  /***************************************************************************
-   *                                                                          *
-   * Default policy for all controllers and actions, unless overridden.       *
-   * (`true` allows public access)                                            *
-   *                                                                          *
-   ***************************************************************************/
-
   '*': 'auth',
   'tasks/get': 'features/viewTasks',
   'tasks/get-by-id': 'features/viewTasks',
@@ -51,6 +34,14 @@ module.exports.policies = {
 
   'dev/*': true,
 
-  // 'documents/*': 'auth',
-  // 'teammates/*': 'auth',
+  'documents/get-by-id': 'features/viewDocuments',
+  'documents/get': 'features/viewDocuments',
+  'documents/patch': 'features/manageDocuments',
+  'documents/post': 'features/manageDocuments',
+
+  'teammates/get-profile-by-id': 'features/viewTeammates',
+  'teammates/get-profiles': 'features/viewTeammates',
+  'teammates/get': 'auth',
+  'teammates/patch': 'features/manageTeammates',
+  'teammates/post': 'features/manageTeammates',
 };

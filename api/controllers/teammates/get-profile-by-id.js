@@ -13,7 +13,11 @@ module.exports = {
     },
   },
 
-  exits: {},
+  exits: {
+    notFound: {
+      responseType: 'notFound',
+    },
+  },
 
   fn: async function ({ id, authorization }) {
     const teammate = await Teammate.findOne({ id }).populate(

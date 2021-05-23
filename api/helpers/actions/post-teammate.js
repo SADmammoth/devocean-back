@@ -10,15 +10,15 @@ module.exports = {
   description: 'Get teammates.',
 
   inputs: {
-    name: { type: 'string', required: true },
-    lastName: { type: 'string', required: true },
+    name: { type: 'string' },
+    lastName: { type: 'string' },
     shortName: {
       type: 'string',
     },
     joinedAt: {
       type: 'string',
     },
-    referAs: { type: 'string', required: true },
+    referAs: { type: 'string' },
     avatar: { type: 'string' },
     // subteams: {
     //   type: 'ref',
@@ -68,6 +68,12 @@ module.exports = {
       //   required: true,
       //TODO
     },
+    hidden: {
+      type: 'boolean',
+    },
+    invited: {
+      type: 'boolean',
+    },
   },
 
   exits: {},
@@ -92,6 +98,9 @@ module.exports = {
     login,
     temporaryPassword,
     email,
+
+    hidden,
+    invited,
   }) {
     const teammate = await Teammate.create({
       name,
@@ -109,12 +118,15 @@ module.exports = {
       contacts,
       email,
       shortName: shortName || name,
-      joinedAt,
+      joinedAt: joinedAt ? new Date(joinedAt).getTime() : Date.now(),
+      hidden,
+      invited,
     }).fetch();
 
     if (!temporaryPassword) temporaryPassword = sails.helpers.faker.password();
 
-    await request.post('/register').use(authPath).send({
+    const endpoint = invited ? '/invite' : '/register';
+    await request.post(endpoint).use(authPath).send({
       login,
       password: temporaryPassword,
       teammateId: teammate.id,

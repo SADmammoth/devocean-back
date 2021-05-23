@@ -69,8 +69,9 @@ module.exports = {
   exits: {},
 
   fn: async function ({ isOnInvite, id, ...inputs }) {
-    if (inputs.isOnInvite) {
+    if (isOnInvite) {
       await sails.helpers.acceptInvite(id);
+      inputs.hidden = false;
     }
     return await Teammate.updateOne({ id }, inputs);
   },
