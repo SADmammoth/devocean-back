@@ -309,6 +309,70 @@ module.exports.routes = {
     },
   },
 
+  'patch /teammates/:id/tag': {
+    action: 'teammates/add-tag',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /teammates/:id/tags': {
+    action: 'teammateTags/post',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'post /teammates/tags': {
+    action: 'teammateTags/post',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /teammates/:id/tags': {
+    action: 'teammateTags/get',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
   'get /statuses': {
     action: 'statuses/get',
     swagger: {
