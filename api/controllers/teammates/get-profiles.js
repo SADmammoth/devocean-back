@@ -12,7 +12,7 @@ module.exports = {
   exits: {},
 
   fn: async function ({ authorization }) {
-    const teammates = await Teammate.find().populate('subteams', 'tags');
+    const teammates = await Teammate.find().populate(['subteams', 'tags']);
 
     return await sails.helpers.populators.teammatesProfilesCollection(
       teammates,

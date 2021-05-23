@@ -9,5 +9,12 @@ module.exports = {
       collection: 'teammate',
       via: 'subteams',
     },
+    parent: {
+      model: 'subteam',
+    },
+    children: {
+      collection: 'subteam',
+      via: 'parent',
+    },
   },
 };

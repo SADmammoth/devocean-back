@@ -22,9 +22,10 @@ module.exports = {
     avatar: { type: 'string', isURL: true },
     createdNotifications: { collection: 'notification', via: 'author' },
     assignedTasks: { collection: 'assignee', via: 'teammate' },
-    subteams: { collection: 'subteam' },
+    subteams: { collection: 'subteam', via: 'teammates' },
     tags: {
       collection: 'teammatetag',
+      via: 'teammates',
     },
     workMode: {
       type: 'string',

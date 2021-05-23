@@ -77,4 +77,11 @@ module.exports.bootstrap = async function () {
         ),
       );
   }
+
+  if ((await Subteam.count()) === 0) {
+    const subteam = await Subteam.create({ name: 'All' }).fetch();
+    await Subteam.addToCollection(subteam.id, 'teammates').members(
+      (await Teammate.find()).map(({ id }) => id),
+    );
+  }
 };

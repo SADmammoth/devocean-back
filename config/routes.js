@@ -702,6 +702,39 @@ module.exports.routes = {
     },
   },
 
+  'get /subteams': {
+    action: 'subteams/get',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'post /subteams': {
+    action: 'subteams/post',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
+  'patch /subteams/:id/add': {
+    action: 'subteams/add-teammate',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+        },
+      },
+    },
+  },
+
   '/': { view: 'swagger-ui' },
 
   /***************************************************************************
