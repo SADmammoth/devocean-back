@@ -20,10 +20,9 @@ module.exports = {
   },
 
   fn: async function ({ id, authorization }) {
-    const teammate = await Teammate.findOne({ id }).populate([
-      'subteams',
-      'tags',
-    ]);
+    const teammate = await Teammate.findOne({ id })
+      .populate('subteams')
+      .populate('tags');
 
     return await sails.helpers.populators.teammateFullProfile(
       teammate,

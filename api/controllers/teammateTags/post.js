@@ -7,7 +7,7 @@ module.exports = {
     id: {
       type: 'string',
     },
-    tagName: {
+    name: {
       type: 'string',
     },
     authorization: {
@@ -17,8 +17,8 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ id, tagName }) {
-    const tag = await TeammateTag.create({ name: tagName }).fetch();
+  fn: async function ({ id, name }) {
+    const tag = await TeammateTag.create({ name: name }).fetch();
     if (id) await Teammate.addToCollection(id, 'tags').members([tag.id]);
   },
 };

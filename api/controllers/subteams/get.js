@@ -12,7 +12,9 @@ module.exports = {
   exits: {},
 
   fn: async function () {
-    const subteams = await Subteam.find().populate(['teammates', 'children']);
+    const subteams = await Subteam.find()
+      .populate('teammates')
+      .populate('children');
     return await Promise.all(
       subteams.map(async ({ teammates, children, ...rest }) => ({
         ...rest,

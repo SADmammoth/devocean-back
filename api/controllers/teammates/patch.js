@@ -79,9 +79,8 @@ module.exports = {
       await sails.helpers.acceptInvite(id);
       inputs.hidden = false;
     }
-    if (subteams)
-      await Teammate.replaceCollection(id, 'subteams').members(subteams);
-    if (tags) await Teammate.replaceCollection(id, 'tags').members(tags);
+
+    await sails.helpers.addSubteamsAndTags(id, subteams, tags, true);
 
     return await Teammate.updateOne({ id }, inputs);
   },

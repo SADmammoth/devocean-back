@@ -125,9 +125,7 @@ module.exports = {
       invited,
     }).fetch();
 
-    if (subteams)
-      await Teammate.addToCollection(teammate.id, 'subteams').members(subteams);
-    if (tags) await Teammate.addToCollection(teammate.id, 'tags').members(tags);
+    await sails.helpers.addSubteamsAndTags(teammate.id, subteams, tags);
 
     if (!temporaryPassword) temporaryPassword = sails.helpers.faker.password();
 

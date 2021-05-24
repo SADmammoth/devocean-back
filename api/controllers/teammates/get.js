@@ -14,7 +14,10 @@ module.exports = {
   fn: async function () {
     const teammates = await Teammate.find({
       select: ['name', 'lastName', 'shortName', 'avatar'],
-    }).populate(['assignedTasks', 'subteams', 'tags']);
+    })
+      .populate('assignedTasks')
+      .populate('subteams')
+      .populate('tags');
     let assignees;
     let assignedTasks;
     return await Promise.all(
