@@ -1,12 +1,9 @@
 module.exports = {
   friendlyName: 'Teammate tag',
 
-  description: 'Get teammate tags.',
+  description: 'Get tags.',
 
   inputs: {
-    id: {
-      type: 'string',
-    },
     authorization: {
       type: 'string',
     },
@@ -14,7 +11,7 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ id }) {
-    return (await Teammate.findOne({ id }).populate('tags')).tags;
+  fn: async function () {
+    return await TeammateTag.find();
   },
 };

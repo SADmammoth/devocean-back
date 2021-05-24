@@ -17,12 +17,12 @@ module.exports = {
     },
     referAs: { type: 'string' },
     avatar: { type: 'string' },
-    // subteams: {
-    //   type: 'ref',
-    // },
-    // tags: {
-    //   type: 'ref',
-    // },
+    subteams: {
+      type: 'ref',
+    },
+    tags: {
+      type: 'ref',
+    },
     workMode: {
       type: 'string',
     },

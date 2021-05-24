@@ -358,6 +358,22 @@ module.exports.routes = {
   },
 
   'get /teammates/:id/tags': {
+    action: 'teammateTags/get-by-teammate',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/teammate' },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  'get /teammates/tags': {
     action: 'teammateTags/get',
     swagger: {
       responses: {

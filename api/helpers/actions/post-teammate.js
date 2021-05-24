@@ -20,12 +20,12 @@ module.exports = {
     },
     referAs: { type: 'string' },
     avatar: { type: 'string' },
-    // subteams: {
-    //   type: 'ref',
-    // },
-    // tags: {
-    //   type: 'ref',
-    // },
+    subteams: {
+      type: 'ref',
+    },
+    tags: {
+      type: 'ref',
+    },
     workMode: {
       type: 'string',
     },
@@ -94,6 +94,8 @@ module.exports = {
     dateOfBirth,
     aboutYourself,
     contacts,
+    subteams,
+    tags,
 
     login,
     temporaryPassword,
@@ -122,6 +124,10 @@ module.exports = {
       hidden,
       invited,
     }).fetch();
+
+    if (subteams)
+      await Teammate.addToCollection(teammate.id, 'subteams').members(subteams);
+    if (tags) await Teammate.addToCollection(teammate.id, 'tags').members(tags);
 
     if (!temporaryPassword) temporaryPassword = sails.helpers.faker.password();
 

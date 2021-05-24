@@ -13,6 +13,12 @@ module.exports = {
     },
     name: { type: 'string' },
     lastName: { type: 'string' },
+    subteams: {
+      type: 'ref',
+    },
+    tags: {
+      type: 'ref',
+    },
     shortName: {
       type: 'string',
     },
@@ -68,11 +74,15 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ isOnInvite, id, ...inputs }) {
+  fn: async function ({ isOnInvite, id, subteams, tags, ...inputs }) {
     if (isOnInvite) {
       await sails.helpers.acceptInvite(id);
       inputs.hidden = false;
     }
+    if (subteams)
+      await Teammate.replaceCollection(id, 'subteams').members(subteams);
+    if (tags) await Teammate.replaceCollection(id, 'tags').members(tags);
+
     return await Teammate.updateOne({ id }, inputs);
   },
 };
