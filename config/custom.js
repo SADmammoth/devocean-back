@@ -190,4 +190,6 @@ module.exports.custom = {
   },
   subscriptionServer: 'http://localhost:1338',
   authenticationServer: 'http://localhost:1339',
+  rootFolderName: 'All tasks',
+  rootListName: 'Without list',
 };

@@ -4,7 +4,10 @@ module.exports = {
   description: '',
 
   inputs: {
-    folder: { type: 'string', defaultsTo: 'Root folder' },
+    folder: {
+      type: 'string',
+      defaultsTo: 'sails.config.custom.rootFolderName',
+    },
   },
 
   exits: {

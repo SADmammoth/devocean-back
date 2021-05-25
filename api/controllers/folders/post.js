@@ -63,14 +63,14 @@ module.exports = {
         .fetch();
 
       tagToSaveId = tagToSave.id;
-    }
 
-    if (!tagToSaveId) {
-      throw {
-        badRequest: {
-          message: `Please provide id or {color, name} in "tag" field`,
-        },
-      };
+      if (!tagToSaveId) {
+        throw {
+          badRequest: {
+            message: `Please provide id or {color, name} in "tag" field`,
+          },
+        };
+      }
     }
 
     const parentFolder = await sails.helpers.findListParent(parent);

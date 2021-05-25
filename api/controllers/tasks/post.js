@@ -27,7 +27,7 @@ module.exports = {
     },
     list: {
       type: 'string',
-      defaultsTo: 'Root list',
+      defaultsTo: 'sails.config.custom.rootListName',
       description: 'List id or name',
       meta: { swagger: { in: 'body' } },
     },
