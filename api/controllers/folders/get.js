@@ -10,7 +10,8 @@ module.exports = {
   fn: async function () {
     const lists = await TaskCollection.find()
       .populate('tasks')
-      .populate('children');
+      .populate('children')
+      .populate('tag');
 
     if (!lists) {
       return [];
@@ -18,8 +19,8 @@ module.exports = {
 
     const list = await Promise.all(
       lists.map(async (list) => {
-        return await sails.helpers.populateList(_.omit(list, 'tag'));
-      })
+        return await sails.helpers.populateList(list);
+      }),
     );
 
     return list;

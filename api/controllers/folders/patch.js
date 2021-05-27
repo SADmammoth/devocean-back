@@ -48,27 +48,23 @@ module.exports = {
       };
     }
 
-    let tagToSaveId;
-    if (tag) {
-      const tagToSave = await sails.helpers.getTag(tag);
-      tagToSaveId = tagToSave ? tagToSave.id : null;
-    }
+    let foundParent;
+    if (parent)
+      foundParent = await TaskCollection.findOne({
+        or: [{ name: parent, id: parent }],
+      });
 
-    const parentFolder = await sails.helpers.findListParent(parent);
-    if (!parentFolder) {
-      throw {
-        badRequest: {
-          message: 'Bad request: list cannot be parent or parent not found',
-        },
-      };
-    }
+    const tagToSave = await Tag.updateOne(
+      { id: folder.tag },
+      { color: tag.color, name: tag.name },
+    );
 
     const updatedFolder = await TaskCollection.updateOne(
       { id },
       {
         name,
-        parent: parentFolder.id,
-        tag: tagToSaveId,
+        parent: foundParent?.id,
+        tag: tagToSave?.id,
       },
     );
 
