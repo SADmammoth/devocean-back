@@ -14,6 +14,9 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'body' } },
     },
+    abstract: {
+      type: 'string',
+    },
     authorization: {
       type: 'string',
       meta: { swagger: { in: 'query' } },
@@ -22,7 +25,7 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ content, title, authorization }) {
+  fn: async function ({ content, title, authorization, abstract }) {
     let { teammateId, login } = await sails.helpers.requestUserData(
       authorization || this.req.headers.authorization.replace('Bearer ', ''),
     );
@@ -33,6 +36,7 @@ module.exports = {
       content,
       author: teammateId,
       title,
+      abstract,
     }).fetch();
     return documents;
   },
