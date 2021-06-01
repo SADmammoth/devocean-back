@@ -45,7 +45,7 @@ module.exports = {
      ***************************************************************************/
     default: {
       adapter: 'sails-mongo',
-      url: process.env.DB_PATH,
+      url: 'mongodb://root:Vfrc200018root@testcluster-shard-00-00.kvuad.azure.mongodb.net:27017,testcluster-shard-00-01.kvuad.azure.mongodb.net:27017,testcluster-shard-00-02.kvuad.azure.mongodb.net:27017/devocean?ssl=true&replicaSet=TestCluster-shard-0&authSource=admin&retryWrites=true&w=majority',
       //--------------------------------------------------------------------------
       //  /\   To avoid checking it in to version control, you might opt to set
       //  ||   sensitive credentials like `url` using an environment variable.
@@ -111,6 +111,87 @@ module.exports = {
     shortcuts: false,
   },
 
+  uploads: {
+    adapter: 'skipper-disk',
+  },
+
+  bootstrap: async function () {
+    if ((await Status.count()) === 0) {
+      await Status.createEach([
+        {
+          name: 'open',
+        },
+        {
+          name: 'wip',
+        },
+        {
+          name: 'closed',
+        },
+        {
+          name: 'backlog',
+        },
+      ]);
+    }
+
+    let rootTag;
+    if ((await Tag.count()) === 0) {
+      rootTag = await Tag.create({
+        id: '60741c66ee507b6198dadd01',
+        name: 'Root',
+      }).fetch();
+    }
+
+    if ((await TaskCollection.count()) === 0) {
+      const rootFolder = await TaskCollection.create({
+        id: '60741c66ee507b6198dadd02',
+        type: 'folder',
+        name: 'sails.config.custom.rootFolderName',
+        isConstant: true,
+      }).fetch();
+      await TaskCollection.create({
+        id: '60741c66ee507b6198dadd03',
+        type: 'list',
+        name: 'sails.config.custom.rootListName',
+        tag: '60741c66ee507b6198dadd01',
+        parent: '60741c66ee507b6198dadd02',
+        isConstant: true,
+      });
+    }
+
+    if ((await Template.count()) === 0) {
+      await Template.createEach(sails.config.custom.templates.items);
+    }
+
+    if ((await NavItem.count()) === 0) {
+      await NavItem.createEach(sails.config.custom.navItems.items);
+    }
+
+    if ((await History.count()) === 0) {
+      const tasks = await Task.find();
+      if (tasks)
+        await History.createEach(
+          await Promise.all(
+            tasks.map(async (task) => {
+              return {
+                time: task.createdAt,
+                task: task.id,
+                changedFields: Object.keys(task),
+                before: null,
+                after: tasks.map((task) => _.omit(task, ['id'])),
+              };
+            }),
+          ),
+        );
+    }
+
+    if ((await Subteam.count()) === 0) {
+      const subteam = await Subteam.create({ name: 'All' }).fetch();
+      await Subteam.addToCollection(subteam.id, 'teammates').members(
+        (await Teammate.find()).map(({ id }) => id),
+      );
+    }
+  },
+
   /***************************************************************************
    *                                                                          *
    * Configure your security settings for production.                         *
@@ -135,10 +216,12 @@ module.exports = {
      *                                                                          *
      ***************************************************************************/
     cors: {
+      allRoutes: true,
       allowOrigins: [
         'https://devocean-back.herokuapp.com',
         'https://devocean-front.herokuapp.com',
       ],
+      allowRequestHeaders: 'Content-Type, Authorization',
     },
   },
 
@@ -338,18 +421,7 @@ module.exports = {
    ***************************************************************************/
   custom: {
     baseUrl: 'https://devocean-back.herokuapp.com',
-
-    // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
-    // stripeSecret: 'sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm',
-    //--------------------------------------------------------------------------
-    // /\   OR, to avoid checking them in to version control, you might opt to
-    // ||   set sensitive credentials like these using environment variables.
-    //
-    // For example:
-    // ```
-    // sendgridSecret=SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU
-    // sails_custom__stripeSecret=sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm
-    // ```
-    //--------------------------------------------------------------------------
+    subscriptionServer: 'http://devocean-comm.herokuapp.com',
+    authenticationServer: 'http://devocean-users.herokuapp.com',
   },
 };
