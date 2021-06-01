@@ -1,0 +1,4169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DEVocean REST API",
+    "description": "React API documentation of DEVocean project",
+    "termsOfService": "http://example.com/terms",
+    "contact": {
+      "name": "Theophilus Omoregbee",
+      "url": "http://github.com/theo4u",
+      "email": "theo4u@ymail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:1337/"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://theoomoregbee.github.io/"
+  },
+  "tags": [
+    {
+      "name": "Document",
+      "description": "Sails blueprint actions for the **Document** model"
+    },
+    {
+      "name": "NavItem",
+      "description": "Sails blueprint actions for the **NavItem** model"
+    },
+    {
+      "name": "Notification",
+      "description": "Sails blueprint actions for the **Notification** model"
+    },
+    {
+      "name": "Status",
+      "description": "Sails blueprint actions for the **Status** model"
+    },
+    {
+      "name": "Subteam",
+      "description": "Sails blueprint actions for the **Subteam** model"
+    },
+    {
+      "name": "Task",
+      "description": "Sails blueprint actions for the **Task** model"
+    },
+    {
+      "name": "Teammate",
+      "description": "Sails blueprint actions for the **Teammate** model"
+    },
+    {
+      "name": "Template",
+      "description": "Sails blueprint actions for the **Template** model"
+    },
+    {
+      "name": "Folder"
+    },
+    {
+      "name": "Teammate tag"
+    },
+    {
+      "name": "Dev"
+    },
+    {
+      "name": "Comment"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "assignee": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/assignee-without-required-constraint"
+          },
+          {
+            "required": [
+              "teammate",
+              "assignedDate"
+            ]
+          }
+        ]
+      },
+      "assignee-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Assignee**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "teammate": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "task": {
+            "description": "JSON dictionary representing the **task** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/task"
+              }
+            ]
+          },
+          "assignedDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "discussions": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/discussions-without-required-constraint"
+          },
+          {
+            "required": [
+              "text"
+            ]
+          }
+        ]
+      },
+      "discussions-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Discussions**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "time": {
+            "type": "number",
+            "format": "double"
+          },
+          "task": {
+            "description": "JSON dictionary representing the **task** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/task"
+              }
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "document": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/document-without-required-constraint"
+          },
+          {
+            "required": [
+              "title",
+              "content"
+            ]
+          }
+        ]
+      },
+      "document-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Document**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "abstract": {
+            "type": "string"
+          },
+          "contributors": {
+            "description": "Array of **teammate**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/teammate"
+            }
+          },
+          "content": {},
+          "createdAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedAt": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "history": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/history-without-required-constraint"
+          },
+          {
+            "required": [
+              "changedFields"
+            ]
+          }
+        ]
+      },
+      "history-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **History**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "time": {
+            "type": "number",
+            "format": "double"
+          },
+          "task": {
+            "description": "JSON dictionary representing the **task** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/task"
+              }
+            ]
+          },
+          "changedFields": {},
+          "before": {},
+          "after": {},
+          "createdAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedAt": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "navitem": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/navitem-without-required-constraint"
+          },
+          {
+            "required": [
+              "label",
+              "link"
+            ]
+          }
+        ]
+      },
+      "navitem-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **NavItem**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "label": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "shortLabel": {
+            "type": "string"
+          },
+          "featureAccess": {
+            "type": "string",
+            "default": "all",
+            "example": "all"
+          },
+          "link": {
+            "type": "string"
+          },
+          "onlyShort": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "notification": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/notification-without-required-constraint"
+          },
+          {
+            "required": [
+              "title",
+              "time"
+            ]
+          }
+        ]
+      },
+      "notification-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Notification**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "format": "date"
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "fullText": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "delayed",
+              "cancelled",
+              "sent"
+            ]
+          }
+        }
+      },
+      "report": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/report-without-required-constraint"
+          },
+          {
+            "required": [
+              "reportedTime"
+            ]
+          }
+        ]
+      },
+      "report-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Report**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "time": {
+            "type": "number",
+            "format": "double"
+          },
+          "task": {
+            "description": "JSON dictionary representing the **task** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/task"
+              }
+            ]
+          },
+          "reportedTime": {
+            "type": "number",
+            "format": "double"
+          },
+          "estimate": {
+            "type": "number",
+            "format": "double"
+          },
+          "activity": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "status": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/status-without-required-constraint"
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "status-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Status**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "tasks": {
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/task"
+            }
+          }
+        }
+      },
+      "statuschange": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/statuschange-without-required-constraint"
+          }
+        ]
+      },
+      "statuschange-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **StatusChange**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "time": {
+            "type": "number",
+            "format": "double"
+          },
+          "task": {
+            "description": "JSON dictionary representing the **task** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/task"
+              }
+            ]
+          },
+          "fromStatus": {
+            "description": "JSON dictionary representing the **status** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/status"
+              }
+            ]
+          },
+          "toStatus": {
+            "description": "JSON dictionary representing the **status** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/status"
+              }
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "subteam": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/subteam-without-required-constraint"
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "subteam-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Subteam**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "teammates": {
+            "description": "Array of **teammate**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/teammate"
+            }
+          },
+          "parent": {
+            "description": "JSON dictionary representing the **subteam** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/subteam"
+              }
+            ]
+          },
+          "children": {
+            "description": "Array of **subteam**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/subteam"
+            }
+          }
+        }
+      },
+      "tag": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/tag-without-required-constraint"
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "tag-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Tag**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "color": {
+            "type": "string"
+          },
+          "lists": {
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/taskcollection"
+            }
+          }
+        }
+      },
+      "task": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/task-without-required-constraint"
+          },
+          {
+            "required": [
+              "title",
+              "priority",
+              "timeInStatus",
+              "list",
+              "status",
+              "template",
+              "customFields",
+              "author"
+            ]
+          }
+        ]
+      },
+      "task-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Task**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "title": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "highest",
+              "blocker"
+            ]
+          },
+          "timeInStatus": {
+            "type": "string",
+            "format": "date"
+          },
+          "estimate": {
+            "type": "number",
+            "format": "double"
+          },
+          "reportedTime": {
+            "type": "number",
+            "format": "double"
+          },
+          "list": {
+            "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            ]
+          },
+          "status": {
+            "description": "JSON dictionary representing the **status** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/status"
+              }
+            ]
+          },
+          "assignee": {
+            "description": "JSON dictionary representing the **assignee** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/assignee"
+              }
+            ]
+          },
+          "template": {
+            "description": "JSON dictionary representing the **template** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/template"
+              }
+            ]
+          },
+          "customFields": {},
+          "author": {
+            "description": "JSON dictionary representing the **teammate** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/teammate"
+              }
+            ]
+          },
+          "contributors": {
+            "description": "Array of **teammate**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/teammate"
+            }
+          }
+        }
+      },
+      "taskcollection": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/taskcollection-without-required-constraint"
+          },
+          {
+            "required": [
+              "name",
+              "type"
+            ]
+          }
+        ]
+      },
+      "taskcollection-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **TaskCollection**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "list",
+              "folder"
+            ]
+          },
+          "children": {
+            "description": "Array of **taskcollection**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/taskcollection"
+            }
+          },
+          "tasks": {
+            "description": "Array of **task**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/task"
+            }
+          },
+          "parent": {
+            "description": "JSON dictionary representing the **taskcollection** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/taskcollection"
+              }
+            ]
+          },
+          "tag": {
+            "description": "JSON dictionary representing the **tag** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/tag"
+              }
+            ]
+          },
+          "isConstant": {
+            "type": "boolean"
+          }
+        }
+      },
+      "teammate": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/teammate-without-required-constraint"
+          }
+        ]
+      },
+      "teammate-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Teammate**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "shortName": {
+            "type": "string"
+          },
+          "joinedAt": {
+            "type": "number",
+            "format": "double"
+          },
+          "referAs": {
+            "type": "string",
+            "enum": [
+              "he",
+              "she",
+              "they"
+            ]
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "createdNotifications": {
+            "description": "Array of **notification**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/notification"
+            }
+          },
+          "assignedTasks": {
+            "description": "Array of **assignee**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/assignee"
+            }
+          },
+          "subteams": {
+            "description": "Array of **subteam**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/subteam"
+            }
+          },
+          "tags": {
+            "description": "Array of **teammatetag**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/teammatetag"
+            }
+          },
+          "workMode": {
+            "type": "string",
+            "enum": [
+              "remote",
+              "onsite"
+            ]
+          },
+          "workHoursStart": {
+            "type": "number",
+            "format": "double"
+          },
+          "workHoursEnd": {
+            "type": "number",
+            "format": "double"
+          },
+          "workDays": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "sun",
+              "mon",
+              "tue",
+              "wed",
+              "thu"
+            ],
+            "example": [
+              "sun",
+              "mon",
+              "tue",
+              "wed",
+              "thu"
+            ]
+          },
+          "timezone": {
+            "type": "integer",
+            "format": "int64",
+            "maximum": 14,
+            "minimum": -12
+          },
+          "workHours": {
+            "type": "string",
+            "default": "fixed",
+            "enum": [
+              "fixed",
+              "flexible"
+            ],
+            "example": "fixed"
+          },
+          "dateOfBirth": {
+            "type": "number",
+            "format": "double"
+          },
+          "aboutYourself": {
+            "type": "string"
+          },
+          "contacts": {},
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "teammatetag": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/teammatetag-without-required-constraint"
+          },
+          {
+            "required": [
+              "name"
+            ]
+          }
+        ]
+      },
+      "teammatetag-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **TeammateTag**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "teammates": {
+            "description": "Array of **teammate**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/teammate"
+            }
+          }
+        }
+      },
+      "template": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/template-without-required-constraint"
+          },
+          {
+            "required": [
+              "name",
+              "fields"
+            ]
+          }
+        ]
+      },
+      "template-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Template**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "fields": {}
+        }
+      }
+    },
+    "parameters": {
+      "AttributeFilterParam": {
+        "in": "query",
+        "name": "_*_",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "To filter results based on a particular attribute, specify a query parameter with the same name as the attribute defined on your model. For instance, if our `Purchase` model has an `amount` attribute, we could send `GET /purchase?amount=99.99` to return a list of $99.99 purchases."
+      },
+      "WhereQueryParam": {
+        "in": "query",
+        "name": "where",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Instead of filtering based on a specific attribute, you may instead choose to provide a `where` parameter with the WHERE piece of a [Waterline criteria](https://sailsjs.com/documentation/concepts/models-and-orm/query-language), _encoded as a JSON string_. This allows you to take advantage of `contains`, `startsWith`, and other sub-attribute criteria modifiers for more powerful `find()` queries.\n\ne.g. `?where={\"name\":{\"contains\":\"theodore\"}}`"
+      },
+      "LimitQueryParam": {
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "The maximum number of records to send back (useful for pagination). Defaults to 30."
+      },
+      "SkipQueryParam": {
+        "in": "query",
+        "name": "skip",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "The number of records to skip (useful for pagination)."
+      },
+      "SortQueryParam": {
+        "in": "query",
+        "name": "sort",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The sort order. By default, returned records are sorted by primary key value in ascending order.\n\ne.g. `?sort=lastName%20ASC`"
+      }
+    }
+  },
+  "paths": {
+    "/avatar": {
+      "get": {
+        "summary": "Teammate",
+        "description": "Get teammates.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "file",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/folders": {
+      "get": {
+        "summary": "Folder",
+        "description": "Get collection of task folders and lists",
+        "tags": [
+          "Folder"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/taskcollection"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Folder",
+        "description": "Post folder",
+        "tags": [
+          "Folder"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "list",
+                      "folder"
+                    ]
+                  },
+                  "tag": {},
+                  "parent": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Task",
+        "description": "Get all tasks, populated with tag",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/task"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Task",
+        "description": "Post task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "priority": {
+                    "type": "string"
+                  },
+                  "estimate": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "reportedTime": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "list": {
+                    "type": "string",
+                    "default": "sails.config.custom.rootListName",
+                    "example": "sails.config.custom.rootListName"
+                  },
+                  "status": {
+                    "type": "string",
+                    "default": "backlog",
+                    "example": "backlog"
+                  },
+                  "teammate": {
+                    "type": "string"
+                  },
+                  "template": {
+                    "type": "string",
+                    "default": "No template",
+                    "example": "No template"
+                  },
+                  "customFields": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teammates": {
+      "get": {
+        "summary": "Teammate",
+        "description": "Get teammates.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Teammate",
+        "description": "Get teammates.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lastName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "shortName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "joinedAt",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "referAs",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "avatar",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subteams",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "workMode",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursStart",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursEnd",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workDays",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "sun",
+                "mon",
+                "tue",
+                "wed",
+                "thu"
+              ],
+              "example": [
+                "sun",
+                "mon",
+                "tue",
+                "wed",
+                "thu"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "timezone",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHours",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "fixed",
+              "example": "fixed"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dateOfBirth",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "aboutYourself",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "contacts",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "login",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "temporaryPassword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "hidden",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "invited",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/statuses": {
+      "get": {
+        "summary": "Status",
+        "description": "Get statuses",
+        "tags": [
+          "Status"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/status"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Status",
+        "description": "Post statuses.",
+        "tags": [
+          "Status"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/status"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "summary": "Notification",
+        "description": "Get notifications",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "teammateId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/notification"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Notification",
+        "description": "Post notifications.",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "fullText": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates": {
+      "get": {
+        "summary": "Template",
+        "description": "Get templates.",
+        "tags": [
+          "Template"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/docs": {
+      "get": {
+        "summary": "Document",
+        "description": "Get documents.",
+        "tags": [
+          "Document"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Document",
+        "description": "Post documents.",
+        "tags": [
+          "Document"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "abstract",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {},
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/navItems": {
+      "get": {
+        "summary": "NavItem",
+        "description": "Get nav items.",
+        "tags": [
+          "NavItem"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/subteams": {
+      "get": {
+        "summary": "Subteam",
+        "description": "Get subteams.",
+        "tags": [
+          "Subteam"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Subteam",
+        "description": "Post subteams.",
+        "tags": [
+          "Subteam"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "parent",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/profiles": {
+      "get": {
+        "summary": "Teammate",
+        "description": "Get teammates profiles.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/tags": {
+      "post": {
+        "summary": "Teammate tag",
+        "description": "Post teammate tag.",
+        "tags": [
+          "Teammate tag"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Teammate tag",
+        "description": "Get tags.",
+        "tags": [
+          "Teammate tag"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/notifications/receive": {
+      "get": {
+        "summary": "Notification",
+        "description": "Get sent or cancelled notifications",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/notification"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/dev/backup": {
+      "get": {
+        "summary": "Dev",
+        "tags": [
+          "Dev"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Dev",
+        "tags": [
+          "Dev"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tags": {},
+                  "collections": {},
+                  "subteams": {},
+                  "teammateTags": {},
+                  "teammates": {},
+                  "assignees": {},
+                  "notifications": {},
+                  "statuses": {},
+                  "templates": {},
+                  "history": {},
+                  "reports": {},
+                  "statusChanges": {},
+                  "discussions": {},
+                  "navitems": {},
+                  "tasks": {},
+                  "documents": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dev/faker/task": {
+      "post": {
+        "summary": "Dev",
+        "tags": [
+          "Dev"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "count",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of priority level"
+          },
+          {
+            "in": "query",
+            "name": "estimate",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "In milliseconds"
+          },
+          {
+            "in": "query",
+            "name": "reportedTime",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "In milliseconds"
+          },
+          {
+            "in": "query",
+            "name": "list",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "List id or name"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id or name of status"
+          },
+          {
+            "in": "query",
+            "name": "teammate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id of teammate to assign task"
+          },
+          {
+            "in": "query",
+            "name": "template",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "customFields",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/dev/faker/notification": {
+      "post": {
+        "summary": "Dev",
+        "tags": [
+          "Dev"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "count",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "author",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "fullText",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/dev/faker/teammate": {
+      "post": {
+        "summary": "Dev",
+        "tags": [
+          "Dev"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "count",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lastName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "referAs",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "avatar",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workMode",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursStart",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursEnd",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workDays",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "timezone",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHours",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "fixed",
+              "example": "fixed"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dateOfBirth",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "aboutYourself",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "contacts",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "temporaryPassword",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/profiles/{id}": {
+      "get": {
+        "summary": "Teammate",
+        "description": "Get teammate profile by id.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/folders/{id}": {
+      "get": {
+        "summary": "Folder",
+        "description": "Get task folder or list",
+        "tags": [
+          "Folder"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "List id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Folder",
+        "description": "Patch folder",
+        "tags": [
+          "Folder"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskcollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "children": {},
+                  "tasks": {},
+                  "tag": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "summary": "Task",
+        "description": "Get full task content by id",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Task",
+        "description": "Patch task.",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "priority": {
+                    "type": "string"
+                  },
+                  "estimate": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "reportedTime": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "list": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "teammate": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "customFields": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Task",
+        "description": "Delete task.",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{id}": {
+      "patch": {
+        "summary": "Teammate",
+        "description": "Get teammates.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lastName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subteams",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "shortName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "joinedAt",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "referAs",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "avatar",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "workMode",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursStart",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHoursEnd",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workDays",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "timezone",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workHours",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "fixed",
+              "example": "fixed"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dateOfBirth",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "in": "query",
+            "name": "aboutYourself",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "contacts",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isOnInvite",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/notifications/{id}": {
+      "get": {
+        "summary": "Notification",
+        "description": "Get full notification content by id",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Notification",
+        "description": "Update fields and delay notification",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "time": {
+                    "type": "string"
+                  },
+                  "fullText": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/templates/{id}": {
+      "get": {
+        "summary": "Template",
+        "tags": [
+          "Template"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/docs/{id}": {
+      "get": {
+        "summary": "Document",
+        "tags": [
+          "Document"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Document",
+        "description": "Patch documents.",
+        "tags": [
+          "Document"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "content",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "abstract",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/assignee": {
+      "patch": {
+        "summary": "Task",
+        "description": "Assign teammate to task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task id to add assignee"
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teammateId": {
+                    "type": "string"
+                  },
+                  "assignedDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}/status": {
+      "patch": {
+        "summary": "Task",
+        "description": "Set status to task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task id to set status"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Status name or id"
+          },
+          {
+            "in": "query",
+            "name": "assignedDate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Date status assigned"
+          },
+          {
+            "in": "query",
+            "name": "text",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comment to status change"
+          },
+          {
+            "in": "query",
+            "name": "author",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/list": {
+      "patch": {
+        "summary": "Task",
+        "tags": [
+          "Task"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "list": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teammates/{id}/tag": {
+      "patch": {
+        "summary": "Teammate",
+        "description": "Add tag to teammate.",
+        "tags": [
+          "Teammate"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/teammates/{id}/tags": {
+      "post": {
+        "summary": "Teammate tag",
+        "description": "Post teammate tag.",
+        "tags": [
+          "Teammate tag"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Teammate tag",
+        "description": "Get teammate tags.",
+        "tags": [
+          "Teammate tag"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/teammate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/notifications/{id}/cancel": {
+      "patch": {
+        "summary": "Notification",
+        "description": "Cancel notification",
+        "tags": [
+          "Notification"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/discussions": {
+      "get": {
+        "summary": "Comment",
+        "description": "Get discussions.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/discussions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Comment",
+        "description": "Post discussions.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/discussions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}/statusChanges": {
+      "get": {
+        "summary": "Comment",
+        "description": "Get status changes.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/statuschanges"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/history": {
+      "get": {
+        "summary": "Comment",
+        "description": "Get history.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/history"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/tasks/{id}/reports": {
+      "get": {
+        "summary": "Comment",
+        "description": "Get reports.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reports"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Comment",
+        "description": "Post reports.",
+        "tags": [
+          "Comment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reports"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reportedTime": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "activity": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subteams/{id}/add": {
+      "patch": {
+        "summary": "Subteam",
+        "description": "Get subteams.",
+        "tags": [
+          "Subteam"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teammateId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
