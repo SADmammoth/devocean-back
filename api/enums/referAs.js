@@ -1,1 +1,0 @@
-module.exports = ['he', 'she'];

@@ -9,4 +9,4 @@
  * https://sailsjs.com/config/blueprints
  */
 
-module.exports.blueprints = {};
+module.exports.blueprints = { actions: false, rest: false, shortcuts: false };
