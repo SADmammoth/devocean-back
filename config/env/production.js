@@ -434,7 +434,7 @@ module.exports = {
         title: 'DEVocean REST API',
         description: 'React API documentation of DEVocean project',
       },
-      servers: [{ url: 'http://localhost:1337/' }],
+      servers: [{ url: 'https://devocean-back.herokuapp.com/' }],
     },
     defaults: {
       responses: {
