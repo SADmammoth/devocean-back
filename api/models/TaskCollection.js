@@ -1,33 +1,42 @@
+const collectionTypes = require('../types/enums/collectionTypes');
+const prefix = require('superagent-prefix');
+const request = require('superagent');
+
 module.exports = {
   attributes: {
     name: { type: 'string', required: true, unique: true },
+    type: { type: 'string', isIn: collectionTypes, required: true },
     children: {
       collection: 'taskcollection',
       via: 'parent',
-      custom: function () {
-        return !this.tag;
-      },
     },
+    tasks: { collection: 'task', via: 'list' },
     parent: {
       model: 'taskcollection',
     },
     tag: {
       model: 'tag',
-      custom: function () {
-        return !this.children || !this.children.length;
-      },
+    },
+
+    isConstant: {
+      type: 'boolean',
     },
   },
-
-  customToJSON: function () {
-    let type = 'unknown';
-    if (this.children && this.children.length) {
-      type = 'list';
-    }
-    if (this.tag) {
-      type = 'folder';
-    }
-    const { id, ...fields } = this;
-    return { id, type, ...fields };
-  },
 };
+
+
+sails.on('taskcollection:updated',({ changes: model }) => {
+  
+  request
+    .get('/taskcollections/notify')
+    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
+
+});
+
+sails.on('taskcollection:created', (model) => {
+  
+request
+    .get('/taskcollections/notify')
+    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
+
+});

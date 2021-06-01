@@ -6,11 +6,7 @@ module.exports = {
     color: {
       ...Color,
     },
-    tasks: {
-      collection: 'task',
-      via: 'tag',
-    },
-    list: {
+    lists: {
       collection: 'taskcollection',
       via: 'tag',
     },

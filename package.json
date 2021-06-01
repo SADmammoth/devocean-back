@@ -15,15 +15,19 @@
     "sails-hook-grunt": "^4.0.0",
     "sails-hook-orm": "^3.0.1",
     "sails-hook-sockets": "^2.0.0",
-    "sails-mongo": "^1.2.0"
+    "sails-hook-uploads": "^0.4.3",
+    "sails-mongo": "^2.0.0",
+    "superagent": "^6.1.0",
+    "superagent-prefix": "^0.0.2"
   },
   "devDependencies": {
     "eslint": "5.16.0",
+    "faker": "^5.5.3",
     "nodemon": "2.0.7",
     "sails-hook-swagger-generator": "^3.3.0"
   },
   "scripts": {
-    "start": "NODE_ENV=production node app.js",
+    "start": "set NODE_ENV=production&& node app.js",
     "dev": "run-p \"mongod --silent\" \"lift\"",
     "lift": "nodemon app.js",
     "test": "npm run lint && npm run custom-tests && echo 'Done.'",

@@ -14,10 +14,17 @@ module.exports = {
   },
 
   fn: async function ({ tagId }) {
-    const tag = await Tag.findOne({ id: tagId }).populate('tasks');
+    const tag = await Tag.findOne({ id: tagId }).populate('lists');
 
     if (tag) {
-      return tag.tasks;
+      let list;
+      const tasks = await Promise.all(
+        tag.lists.map(async ({ id }) => {
+          list = await TaskCollection({ id }).populate('tasks');
+          return list.tasks;
+        })
+      );
+      return tasks.flat();
     }
   },
 };
