@@ -192,4 +192,5 @@ module.exports.custom = {
   authenticationServer: 'http://localhost:1339',
   rootFolderName: 'All tasks',
   rootListName: 'Without list',
+  baseUrl: 'http://localhost:1337',
 };

@@ -44,4 +44,5 @@ module.exports.policies = {
   'teammates/get': 'auth',
   'teammates/patch': 'features/manageTeammates',
   'teammates/post': 'features/manageTeammates',
+  'teammates/avatar': true,
 };

@@ -20,20 +20,20 @@ module.exports = {
     const foundSubteams = await Subteam.find({
       or: [
         {
-          name: { in: subteams },
+          name: { in: subteams || [] },
         },
         {
-          id: { in: subteams },
+          id: { in: subteams || [] },
         },
       ],
     });
     const foundTags = await TeammateTag.find({
       or: [
         {
-          name: { in: tags },
+          name: { in: tags || [] },
         },
         {
-          id: { in: tags },
+          id: { in: tags || [] },
         },
       ],
     });

@@ -26,7 +26,7 @@ module.exports = {
       type: 'string',
     },
     referAs: { type: 'string' },
-    avatar: { type: 'string' },
+    avatar: { type: 'ref' },
     workMode: {
       type: 'string',
     },
@@ -74,14 +74,27 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ isOnInvite, id, subteams, tags, ...inputs }) {
-    if (isOnInvite) {
-      await sails.helpers.acceptInvite(id);
-      inputs.hidden = false;
-    }
-
+  fn: async function ({ avatar, isOnInvite, id, subteams, tags, ...inputs }) {
     await sails.helpers.addSubteamsAndTags(id, subteams, tags, true);
 
-    return await Teammate.updateOne({ id }, inputs);
+    this.req.file('avatar').upload(async (err, files) => {
+      let avatar;
+      if (files) [avatar] = files;
+      const teammate = await Teammate.updateOne(
+        { id },
+        {
+          ...inputs,
+          avatar:
+            sails.config.custom.baseUrl + '/avatar/?file=' + avatar?.stream.fd,
+        },
+      );
+
+      if (isOnInvite) {
+        await sails.helpers.acceptInvite(id);
+        inputs.hidden = false;
+      }
+
+      return teammate;
+    });
   },
 };

@@ -19,7 +19,7 @@ module.exports = {
     },
     joinedAt: { type: 'number', autoCreatedAt: true },
     referAs: { type: 'string', isIn: referAs },
-    avatar: { type: 'string', isURL: true },
+    avatar: { type: 'string' },
     createdNotifications: { collection: 'notification', via: 'author' },
     assignedTasks: { collection: 'assignee', via: 'teammate' },
     subteams: { collection: 'subteam', via: 'teammates' },

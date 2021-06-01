@@ -24,6 +24,8 @@ module.exports = {
       .populate('subteams')
       .populate('tags');
 
+    if (!teammate) throw 'notFound';
+
     return await sails.helpers.populators.teammateFullProfile(
       teammate,
       authorization || this.req.headers.authorization.replace('Bearer ', ''),

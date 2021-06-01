@@ -31,6 +31,8 @@ module.exports.routes = {
       .send(swaggerJson);
   },
 
+  'get /avatar': { action: 'teammates/avatar' },
+
   'get /folders': {
     action: 'folders/get',
     swagger: {
@@ -816,6 +818,22 @@ module.exports.routes = {
   },
 
   '/': { view: 'swagger-ui' },
+
+  'post /avatar': {
+    action: 'dev/avatar',
+    swagger: {
+      responses: {
+        200: {
+          description: 'The requested resource',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/notification' },
+            },
+          },
+        },
+      },
+    },
+  },
 
   /***************************************************************************
    *                                                                          *
