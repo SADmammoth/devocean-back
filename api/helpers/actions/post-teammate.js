@@ -22,6 +22,7 @@ module.exports = {
     avatar: { type: 'string' },
     subteams: {
       type: 'ref',
+      defaultsTo: 'All',
     },
     tags: {
       type: 'ref',

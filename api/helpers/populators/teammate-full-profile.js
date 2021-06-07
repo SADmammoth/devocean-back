@@ -26,14 +26,16 @@ module.exports = {
       workHoursStart,
       workHoursEnd,
       workDays,
-    )
-      ? 'working'
-      : 'not working';
+    );
+    let newStatus = status;
+    if (status !== undefined) {
+      newStatus = status ? 'working' : 'not working';
+    }
     const actualStatus = await sails.helpers.getTeammateActualStatus(
       id,
       authorization,
     );
 
-    return { status, actualStatus, ...teammate };
+    return { status: newStatus, actualStatus, ...teammate };
   },
 };

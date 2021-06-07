@@ -34,14 +34,12 @@ module.exports = {
     },
     workDays: {
       type: 'ref',
-      defaultsTo: workDays.slice(0, 5),
     },
     timezone: {
       type: 'number',
     },
     workHours: {
       type: 'string',
-      defaultsTo: 'fixed',
     },
     dateOfBirth: {
       type: 'number',

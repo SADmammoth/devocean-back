@@ -39,7 +39,6 @@ module.exports = {
     },
     workDays: {
       type: 'ref',
-      defaultsTo: workDays.slice(0, 5),
       custom: (value) => {
         return _.isArray(value) && _.difference(value, workDays).length === 0;
       },
@@ -52,7 +51,6 @@ module.exports = {
     },
     workHours: {
       type: 'string',
-      defaultsTo: 'fixed',
       isIn: workHours,
     },
     dateOfBirth: {

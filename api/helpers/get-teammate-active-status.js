@@ -29,6 +29,9 @@ module.exports = {
   },
 
   fn: function ({ workHours, workHoursStart, workHoursEnd, workDays }) {
+    if (!workHours || !workHoursStart || !workHoursEnd || !workDays) {
+      return;
+    }
     if (workHours === 'flexible') {
       return;
     }
