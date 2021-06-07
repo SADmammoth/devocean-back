@@ -39,13 +39,13 @@ module.exports.bootstrap = async function () {
     const rootFolder = await TaskCollection.create({
       id: '60741c66ee507b6198dadd02',
       type: 'folder',
-      name: 'sails.config.custom.rootFolderName',
+      name: sails.config.custom.rootFolderName,
       isConstant: true,
     }).fetch();
     await TaskCollection.create({
       id: '60741c66ee507b6198dadd03',
       type: 'list',
-      name: 'sails.config.custom.rootListName',
+      name: sails.config.custom.rootListName,
       tag: '60741c66ee507b6198dadd01',
       parent: '60741c66ee507b6198dadd02',
       isConstant: true,
@@ -71,7 +71,7 @@ module.exports.bootstrap = async function () {
               task: task.id,
               changedFields: Object.keys(task),
               before: null,
-              after: tasks.map((task) => _.omit(task, ['id'])),
+              after: _.omit(task, ['id']),
             };
           }),
         ),

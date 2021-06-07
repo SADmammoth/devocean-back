@@ -6,6 +6,10 @@ module.exports = {
   inputs: {
     id: { type: 'string', required: true, meta: { swagger: { in: 'path' } } },
 
+    title: {
+      type: 'string',
+      meta: { swagger: { in: 'body' } },
+    },
     priority: {
       type: 'string',
       description: 'Name of priority level',
@@ -97,7 +101,7 @@ module.exports = {
         description,
         customFields,
       },
-    ).fetch();
+    );
 
     const query = () => Task.findOne({ id: task.id });
 

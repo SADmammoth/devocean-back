@@ -57,31 +57,62 @@ sails.on('task:created', async ({ change }) => {
 
 sails.on('task:updated', async ({ change, diff }) => {
   const task = await Task.findOne({ id: change.id }).populate('contributors');
+  const newChange = Object.fromEntries(
+    Object.entries(diff).map(([key, value]) => {
+      if (value.id) return [key, value.toString()];
+      return [key, value];
+    }),
+  );
 
   const lastChange = await History.find({
-    where: { task: task.id, changedFields: Object.keys(diff) },
+    where: { task: task.id, changedFields: Object.keys(newChange) },
     sort: [{ updatedAt: 'DESC' }],
-    select: ['after', 'changedFields'],
+    select: ['after', 'changedFields', 'updatedAt'],
   });
 
   const lastChangeState = Object.fromEntries(
-    Object.entries(diff).map(([key, value]) => {
-      return [key, lastChange[0].after[key]];
-    }),
+    Object.entries(newChange)
+      .map(([key, value]) => {
+        let lastValue;
+        for (let i = 0; i < lastChange.length; i++) {
+          if (lastChange[i].after[key]) {
+            lastValue = lastChange[i].after[key];
+            break;
+          }
+        }
+        return [key, lastValue];
+      })
+      .filter(([, el]) => !!el),
   );
 
-  const before = lastChangeState;
-  const after = Object.fromEntries(
-    Object.entries(diff).filter(([key, value]) => {
-      return before[key] !== value;
-    }),
-  );
+  function difference(object, base) {
+    function changes(object, base) {
+      return _.transform(object, function (result, value, key) {
+        if (!_.isEqual(value, base[key])) {
+          if (value instanceof Date && base[key] instanceof Date) {
+            if (value.getTime() === base[key].getTime()) {
+              result[key] = value;
+            }
+          } else {
+            result[key] =
+              _.isObject(value) && _.isObject(base[key])
+                ? changes(value, base[key])
+                : value;
+          }
+        }
+      });
+    }
+    return changes(object, base);
+  }
+
+  const before = difference(lastChangeState, newChange);
+  const after = difference(newChange, lastChangeState);
 
   if (_.isEmpty(after)) {
     return;
   }
 
-  return await History.create({
+  const history = await History.create({
     time: new Date(),
     author: task.contributors.slice(-1)[0].id,
     task: change.id,
@@ -89,6 +120,13 @@ sails.on('task:updated', async ({ change, diff }) => {
     before,
     after,
   });
+
+  await request
+    .get('/history/notify')
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
+
+  return history;
 });
 
 sails.on('task:updated', async ({ change, diff }) => {
@@ -106,6 +144,11 @@ sails.on('task:updated', async ({ change, diff }) => {
       estimate: diff.estimate,
       activity: '$estimate',
     });
+
+    await request
+      .get('/reports/notify')
+      .use(prefix(sails.config.custom.subscriptionServer))
+      .then(({ body: { message } }) => console.log(message));
   }
 });
 

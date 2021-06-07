@@ -3,7 +3,7 @@ let lastChange = null;
 module.exports = function eventsHook(app) {
   return {
     initialize(done) {
-      app.after('hook:orm:loaded', () => {
+      app.after('lifted', () => {
         const events = {
           created: 'afterCreate',
           diffReceived: 'beforeUpdate',
@@ -20,8 +20,11 @@ module.exports = function eventsHook(app) {
             const method = events[event];
 
             // Start extending the models
-            const callbacks = app.models[model]._callbacks;
-            callbacks[method] = setupEvent(app, evt, callbacks[method]);
+            app.models[model]._callbacks[method] = setupEvent(
+              app,
+              evt,
+              app.models[model]._callbacks[method],
+            );
           }
 
           const callback = app.models[model]._callbacks.beforeUpdate;

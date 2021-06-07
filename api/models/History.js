@@ -20,15 +20,9 @@ module.exports = {
   },
 };
 
-sails.on('history:updated', ({ changes: model }) => {
-  request
-    .get('/history/notify')
-    .use(prefix(sails.config.custom.subscriptionServer))
-    .then(({ body: { message } }) => console.log(message));
-});
-
-sails.on('history:created', (model) => {
-  request
+sails.on('history:updated', async ({ changes: model }) => {
+  console.log(0);
+  await request
     .get('/history/notify')
     .use(prefix(sails.config.custom.subscriptionServer))
     .then(({ body: { message } }) => console.log(message));
