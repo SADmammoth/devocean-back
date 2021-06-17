@@ -93,8 +93,9 @@ module.exports = {
         {
           joinedAt: new Date(joinedAt),
           ...inputs,
-          avatar:
-            sails.config.custom.baseUrl + '/avatar/?file=' + avatar?.stream.fd,
+          avatar: avatar
+            ? sails.config.custom.baseUrl + '/avatar/?file=' + avatar?.stream.fd
+            : undefined,
         },
       );
 
