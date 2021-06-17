@@ -854,26 +854,7 @@
             "type": "number",
             "format": "double"
           },
-          "workDays": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "default": [
-              "sun",
-              "mon",
-              "tue",
-              "wed",
-              "thu"
-            ],
-            "example": [
-              "sun",
-              "mon",
-              "tue",
-              "wed",
-              "thu"
-            ]
-          },
+          "workDays": {},
           "timezone": {
             "type": "integer",
             "format": "int64",
@@ -882,12 +863,10 @@
           },
           "workHours": {
             "type": "string",
-            "default": "fixed",
             "enum": [
               "fixed",
               "flexible"
-            ],
-            "example": "fixed"
+            ]
           },
           "dateOfBirth": {
             "type": "number",
@@ -1406,26 +1385,7 @@
             "in": "query",
             "name": "workDays",
             "required": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "default": [
-                "sun",
-                "mon",
-                "tue",
-                "wed",
-                "thu"
-              ],
-              "example": [
-                "sun",
-                "mon",
-                "tue",
-                "wed",
-                "thu"
-              ]
-            }
+            "schema": {}
           },
           {
             "in": "query",
@@ -1441,9 +1401,7 @@
             "name": "workHours",
             "required": false,
             "schema": {
-              "type": "string",
-              "default": "fixed",
-              "example": "fixed"
+              "type": "string"
             }
           },
           {
@@ -2858,6 +2816,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "title": {
+                    "type": "string"
+                  },
                   "priority": {
                     "type": "string"
                   },

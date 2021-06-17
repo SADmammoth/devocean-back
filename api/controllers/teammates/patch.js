@@ -74,7 +74,15 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ avatar, isOnInvite, id, subteams, tags, ...inputs }) {
+  fn: async function ({
+    avatar,
+    isOnInvite,
+    id,
+    subteams,
+    tags,
+    joinedAt,
+    ...inputs
+  }) {
     await sails.helpers.addSubteamsAndTags(id, subteams, tags, true);
 
     this.req.file('avatar').upload(async (err, files) => {
@@ -83,6 +91,7 @@ module.exports = {
       const teammate = await Teammate.updateOne(
         { id },
         {
+          joinedAt: new Date(joinedAt),
           ...inputs,
           avatar:
             sails.config.custom.baseUrl + '/avatar/?file=' + avatar?.stream.fd,

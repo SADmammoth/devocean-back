@@ -17,6 +17,12 @@ module.exports = {
   },
 
   fn: async function ({ teammateId, subteams, tags, replace }) {
+    if (!(subteams instanceof Array)) {
+      subteams = [subteams];
+    }
+    if (!(tags instanceof Array)) {
+      tags = [tags];
+    }
     const foundSubteams = await Subteam.find({
       or: [
         {
