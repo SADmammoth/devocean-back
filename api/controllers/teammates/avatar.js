@@ -12,6 +12,7 @@ module.exports = {
   exits: {},
 
   fn: async function ({ file }) {
+    if (!file) return;
     let downloading = await sails.startDownload('.tmp/uploads/' + file);
     return downloading;
   },

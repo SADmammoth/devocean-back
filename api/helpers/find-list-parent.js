@@ -8,6 +8,9 @@ module.exports = {
       type: 'string',
       defaultsTo: 'sails.config.custom.rootFolderName',
     },
+    workspaceId: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -16,9 +19,12 @@ module.exports = {
     },
   },
 
-  fn: async function ({ folder }) {
+  fn: async function ({ folder, workspaceId }) {
     const parent = await TaskCollection.findOne({
-      or: [{ id: folder }, { name: folder }],
+      or: [
+        { id: folder, workspaceId },
+        { name: folder, workspaceId },
+      ],
     });
 
     if (parent.type === 'list') {

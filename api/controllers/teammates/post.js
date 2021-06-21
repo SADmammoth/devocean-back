@@ -78,6 +78,11 @@ module.exports = {
   exits: {},
 
   fn: async function (inputs) {
-    return await sails.helpers.actions.postTeammate.with(inputs);
+    return await sails.helpers.actions.postTeammate.with({
+      ...inputs,
+      authorization:
+        inputs.authorization ||
+        this.req.headers.authorization.replace('Bearer ', ''),
+    });
   },
 };

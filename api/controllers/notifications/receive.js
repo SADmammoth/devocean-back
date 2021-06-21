@@ -3,23 +3,31 @@ module.exports = {
 
   description: 'Get sent or cancelled notifications',
 
-  inputs: {},
+  inputs: {
+    authorization: {
+      type: 'string',
+    },
+  },
 
-  exits: {},
-
-  fn: async function () {
+  fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
     const notifications = await Notification.find({
       or: [
         {
           time: {
             '<=': new Date(),
           },
+          workspaceId,
         },
         {
           status: 'sent',
+          workspaceId,
         },
         {
           status: 'cancelled',
+          workspaceId,
         },
       ],
     }).populate('author');
@@ -35,7 +43,7 @@ module.exports = {
           return await Notification.updateOne({ id }, { status: 'sent' });
         }
         return notification;
-      })
+      }),
     );
 
     return notifications;

@@ -20,14 +20,22 @@ module.exports = {
   },
 
   fn: async function ({ teammates, authorization }) {
+    let { teammateId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
     return await Promise.all(
-      teammates.map(
-        async (teammate) =>
-          await sails.helpers.populators.teammateProfile(
-            teammate,
-            authorization,
-          ),
-      ),
+      teammates
+        .filter(({ hidden, id }) => {
+          return !hidden || teammateId === id;
+        })
+        .map(
+          async (teammate) =>
+            await sails.helpers.populators.teammateProfile(
+              teammate,
+              authorization,
+            ),
+        ),
     );
   },
 };

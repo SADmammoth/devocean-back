@@ -11,8 +11,11 @@ module.exports = {
 
   exits: {},
 
-  fn: async function () {
-    const subteams = await Subteam.find()
+  fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+    const subteams = await Subteam.find({ workspaceId })
       .populate('teammates')
       .populate('children');
     return await Promise.all(

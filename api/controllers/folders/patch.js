@@ -9,6 +9,9 @@ module.exports = {
     children: { type: 'ref', meta: { swagger: { in: 'body' } } },
     tasks: { type: 'ref', meta: { swagger: { in: 'body' } } },
     tag: { type: 'json', meta: { swagger: { in: 'body' } } },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -18,7 +21,10 @@ module.exports = {
     },
   },
 
-  fn: async function ({ id, name, parent, tag }) {
+  fn: async function ({ id, name, parent, tag, authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
     const folder = await TaskCollection.findOne({ id })
       .populate('children')
       .populate('tasks');
@@ -51,7 +57,10 @@ module.exports = {
     let foundParent;
     if (parent)
       foundParent = await TaskCollection.findOne({
-        or: [{ name: parent, id: parent }],
+        or: [
+          { name: parent, workspaceId },
+          { id: parent, workspaceId },
+        ],
       });
 
     const tagToSave = await Tag.updateOne(

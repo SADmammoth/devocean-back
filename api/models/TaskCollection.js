@@ -4,7 +4,7 @@ const request = require('superagent');
 
 module.exports = {
   attributes: {
-    name: { type: 'string', required: true, unique: true },
+    name: { type: 'string', required: true },
     type: { type: 'string', isIn: collectionTypes, required: true },
     children: {
       collection: 'taskcollection',
@@ -21,22 +21,22 @@ module.exports = {
     isConstant: {
       type: 'boolean',
     },
+    workspaceId: {
+      type: 'string',
+    },
   },
 };
 
-
-sails.on('taskcollection:updated',({ changes: model }) => {
-  
+sails.on('taskcollection:updated', ({ changes: model }) => {
   request
     .get('/taskcollections/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });
 
 sails.on('taskcollection:created', (model) => {
-  
-request
+  request
     .get('/taskcollections/notify')
-    .use(prefix(sails.config.custom.subscriptionServer)).then(({body: {message}})=>console.log(message));
-
+    .use(prefix(sails.config.custom.subscriptionServer))
+    .then(({ body: { message } }) => console.log(message));
 });

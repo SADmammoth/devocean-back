@@ -72,20 +72,30 @@ module.exports = {
     customFields,
     authorization,
   }) {
+    let {
+      teammateId: author,
+      login,
+      workspaceId,
+    } = await sails.helpers.requestUserData(authorization);
     const foundStatus = await Status.findOne({
-      or: [{ name: status }, { id: status }],
+      or: [
+        { name: status, workspaceId },
+        { id: status, workspaceId },
+      ],
     });
     const foundList = await TaskCollection.findOne({
-      or: [{ name: list }, { id: list }],
+      or: [
+        { name: list, workspaceId },
+        { id: list, workspaceId },
+      ],
     });
 
     const foundTemplate = await Template.findOne({
-      or: [{ name: template }, { id: template }],
+      or: [
+        { name: template, workspaceId },
+        { id: template, workspaceId },
+      ],
     });
-
-    let { teammateId: author, login } = await sails.helpers.requestUserData(
-      authorization,
-    );
 
     if (!author) author = login;
 

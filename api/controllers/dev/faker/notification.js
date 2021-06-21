@@ -26,7 +26,7 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ count, title, time, author, fullText }) {
+  fn: async function ({ count, title, time, author, fullText, authorization }) {
     let notification;
     const notifications = await Promise.all(
       new Array(count).fill(0).map(async () => {
@@ -36,6 +36,7 @@ module.exports = {
           author:
             author || (await sails.helpers.faker.randomRecord(Teammate)).id,
           fullText: fullText || sails.helpers.faker.text(),
+          authorization,
         };
 
         return await sails.helpers.actions.postNotification.with(notification);

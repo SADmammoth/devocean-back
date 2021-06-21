@@ -11,7 +11,10 @@ module.exports = {
 
   exits: {},
 
-  fn: async function () {
-    return await TeammateTag.find();
+  fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+    return await TeammateTag.find({ workspaceId });
   },
 };

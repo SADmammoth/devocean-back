@@ -11,20 +11,26 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'body' } },
     },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
 
-  fn: async function ({ id, list }) {
+  fn: async function ({ id, list, authorization }) {
+    let { teammateId, login, workspaceId } =
+      await sails.helpers.requestUserData(
+        authorization || this.req.headers.authorization.replace('Bearer ', ''),
+      );
     const foundList = await TaskCollection.findOne({
-      or: [{ id: list }, { name: list }],
+      or: [
+        { id: list, workspaceId },
+        { name: list, workspaceId },
+      ],
     });
 
     const task = await Task.updateOne({ id }, { list: foundList.id });
-
-    let { teammateId, login } = await sails.helpers.requestUserData(
-      authorization || this.req.headers.authorization.replace('Bearer ', ''),
-    );
 
     if (!teammateId) teammateId = login;
 

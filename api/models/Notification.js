@@ -17,6 +17,9 @@ module.exports = {
       type: 'string',
       isIn: notificationStatuses,
     },
+    workspaceId: {
+      type: 'string',
+    },
   },
 };
 

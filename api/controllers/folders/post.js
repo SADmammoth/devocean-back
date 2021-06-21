@@ -13,6 +13,9 @@ module.exports = {
     },
     tag: { type: 'json', meta: { swagger: { in: 'body' } } },
     parent: { type: 'string', meta: { swagger: { in: 'body' } } },
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -24,7 +27,10 @@ module.exports = {
     },
   },
 
-  fn: async function ({ type, name, tag, parent }) {
+  fn: async function ({ type, name, tag, parent, authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
     const typeByFields = sails.helpers.getCollectionTypeByFields(tag);
 
     if (
@@ -45,12 +51,12 @@ module.exports = {
 
     let tagToSaveId;
     if (tag) {
-      const tagToSave = await sails.helpers.getTag(tag);
+      const tagToSave = await sails.helpers.getTag(tag, workspaceId);
       tagToSaveId = tagToSave ? tagToSave.id : null;
     }
 
     if (type === 'list' && !tagToSaveId && !tag) {
-      const tagToSave = await Tag.create({ color: '', name })
+      const tagToSave = await Tag.create({ color: '', name, workspaceId })
         .intercept((err) => {
           if (err.code === 'E_UNIQUE') {
             return {
@@ -73,7 +79,10 @@ module.exports = {
       }
     }
 
-    const parentFolder = await sails.helpers.findListParent(parent);
+    const parentFolder = await sails.helpers.findListParent(
+      parent,
+      workspaceId,
+    );
     if (!parentFolder) {
       throw {
         badRequest: {
@@ -87,6 +96,7 @@ module.exports = {
       type,
       tag: tagToSaveId,
       parent,
+      workspaceId,
     }).fetch();
 
     return folder;

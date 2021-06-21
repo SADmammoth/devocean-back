@@ -18,6 +18,9 @@ module.exports = {
   exits: {},
 
   fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
     const features = await request
       .get('/access/features/max')
       .use(authPath)
@@ -32,7 +35,10 @@ module.exports = {
       .map(([feature]) => feature);
 
     const navItems = await NavItem.find({
-      or: [{ featureAccess: { in: searchFeatures } }, { featureAccess: 'all' }],
+      or: [
+        { featureAccess: { in: searchFeatures }, workspaceId },
+        { featureAccess: 'all', workspaceId },
+      ],
     });
 
     return navItems;

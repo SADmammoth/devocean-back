@@ -81,9 +81,20 @@ module.exports = {
     subteams,
     tags,
     joinedAt,
+    authorization,
     ...inputs
   }) {
-    await sails.helpers.addSubteamsAndTags(id, subteams, tags, true);
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+
+    await sails.helpers.addSubteamsAndTags(
+      id,
+      subteams,
+      tags,
+      workspaceId,
+      true,
+    );
 
     this.req.file('avatar').upload(async (err, files) => {
       let avatar;
@@ -92,6 +103,7 @@ module.exports = {
         { id },
         {
           joinedAt: new Date(joinedAt),
+          authorization,
           ...inputs,
           avatar: avatar
             ? sails.config.custom.baseUrl + '/avatar/?file=' + avatar?.stream.fd

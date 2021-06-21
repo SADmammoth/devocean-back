@@ -68,6 +68,7 @@ module.exports = {
     authorization,
   }) {
     let task;
+    let { workspaceId } = await sails.helpers.requestUserData(authorization);
     const tasks = await Promise.all(
       new Array(count).fill(0).map(async () => {
         task = {
@@ -81,14 +82,20 @@ module.exports = {
             (
               await sails.helpers.faker.randomRecord(TaskCollection, {
                 type: 'list',
+                workspaceId,
               })
             ).id,
-          status: status || (await sails.helpers.faker.randomRecord(Status)).id,
+          status:
+            status ||
+            (await sails.helpers.faker.randomRecord(Status, { workspaceId }))
+              .id,
           teammate:
             teammate ||
             (await sails.helpers.faker.randomRecord(Teammate, {}, true)).id,
           template:
-            template || (await sails.helpers.faker.randomRecord(Template)).id,
+            template ||
+            (await sails.helpers.faker.randomRecord(Template, { workspaceId }))
+              .id,
           customFields: customFields || {},
         };
 

@@ -7,6 +7,9 @@ module.exports = {
     teammateId: { type: 'string', required: true },
     subteams: { type: 'ref' },
     tags: { type: 'ref' },
+    workspaceId: {
+      type: 'string',
+    },
     replace: { type: 'boolean' },
   },
 
@@ -16,20 +19,23 @@ module.exports = {
     },
   },
 
-  fn: async function ({ teammateId, subteams, tags, replace }) {
+  fn: async function ({ teammateId, subteams, tags, workspaceId, replace }) {
     if (!(subteams instanceof Array)) {
       subteams = [subteams];
     }
     if (!(tags instanceof Array)) {
       tags = [tags];
     }
+
     const foundSubteams = await Subteam.find({
       or: [
         {
           name: { in: subteams || [] },
+          workspaceId,
         },
         {
           id: { in: subteams || [] },
+          workspaceId,
         },
       ],
     });
@@ -37,9 +43,11 @@ module.exports = {
       or: [
         {
           name: { in: tags || [] },
+          workspaceId,
         },
         {
           id: { in: tags || [] },
+          workspaceId,
         },
       ],
     });

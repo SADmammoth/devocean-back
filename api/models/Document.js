@@ -9,7 +9,7 @@ module.exports = {
       //TODO required
     },
     abstract: {
-      type: "string"
+      type: 'string',
     },
     contributors: {
       collection: 'teammate',
@@ -25,6 +25,9 @@ module.exports = {
     updatedAt: {
       type: 'number',
       autoUpdatedAt: true,
+    },
+    workspaceId: {
+      type: 'string',
     },
   },
 };

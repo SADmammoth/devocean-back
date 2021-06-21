@@ -26,9 +26,10 @@ module.exports = {
   exits: {},
 
   fn: async function ({ content, title, authorization, abstract }) {
-    let { teammateId, login } = await sails.helpers.requestUserData(
-      authorization || this.req.headers.authorization.replace('Bearer ', ''),
-    );
+    let { teammateId, login, workspaceId } =
+      await sails.helpers.requestUserData(
+        authorization || this.req.headers.authorization.replace('Bearer ', ''),
+      );
 
     if (!teammateId) teammateId = login;
 
@@ -37,6 +38,7 @@ module.exports = {
       author: teammateId,
       title,
       abstract,
+      workspaceId,
     }).fetch();
     return documents;
   },

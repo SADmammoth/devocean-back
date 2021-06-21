@@ -75,6 +75,10 @@ module.exports = {
     invited: {
       type: 'boolean',
     },
+
+    authorization: {
+      type: 'string',
+    },
   },
 
   exits: {},
@@ -104,7 +108,11 @@ module.exports = {
 
     hidden,
     invited,
+
+    authorization,
   }) {
+    let { workspaceId } = await sails.helpers.requestUserData(authorization);
+
     const teammate = await Teammate.create({
       name,
       lastName,
@@ -126,17 +134,33 @@ module.exports = {
       invited,
     }).fetch();
 
-    await sails.helpers.addSubteamsAndTags(teammate.id, subteams, tags);
-
     if (!temporaryPassword) temporaryPassword = sails.helpers.faker.password();
 
     const endpoint = invited ? '/invite' : '/register';
-    await request.post(endpoint).use(authPath).send({
+    const response = await request.post(endpoint).use(authPath).send({
       login,
       password: temporaryPassword,
       teammateId: teammate.id,
       role: 'Admin' /*TODO*/,
+      workspaceId,
     });
+
+    if (!invited) {
+      await sails.helpers.actions.init(response.body.workspaceId);
+      await sails.helpers.addSubteamsAndTags(
+        teammate.id,
+        subteams,
+        tags,
+        response.body.workspaceId,
+      );
+    } else {
+      await sails.helpers.addSubteamsAndTags(
+        teammate.id,
+        subteams,
+        tags,
+        workspaceId,
+      );
+    }
 
     //TODO Send email
 

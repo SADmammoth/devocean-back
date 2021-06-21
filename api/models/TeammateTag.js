@@ -3,11 +3,11 @@ module.exports = {
     name: {
       type: 'string',
       required: true,
-      unique: true,
     },
     teammates: {
       collection: 'teammate',
       via: 'tags',
     },
+    workspaceId: { type: 'string' },
   },
 };

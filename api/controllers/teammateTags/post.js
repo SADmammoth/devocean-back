@@ -17,8 +17,11 @@ module.exports = {
 
   exits: {},
 
-  fn: async function ({ id, name }) {
-    const tag = await TeammateTag.create({ name: name }).fetch();
+  fn: async function ({ id, name, authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+    const tag = await TeammateTag.create({ name, workspaceId }).fetch();
     if (id) await Teammate.addToCollection(id, 'tags').members([tag.id]);
   },
 };

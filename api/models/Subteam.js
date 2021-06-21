@@ -3,7 +3,6 @@ module.exports = {
     name: {
       type: 'string',
       required: true,
-      unique: true,
     },
     teammates: {
       collection: 'teammate',
@@ -15,6 +14,9 @@ module.exports = {
     children: {
       collection: 'subteam',
       via: 'parent',
+    },
+    workspaceId: {
+      type: 'string',
     },
   },
 };

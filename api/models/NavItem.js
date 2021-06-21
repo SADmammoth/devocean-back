@@ -3,7 +3,6 @@ module.exports = {
     label: {
       type: 'string',
       required: true,
-      unique: true,
     },
     shortLabel: {
       type: 'string',
@@ -19,6 +18,9 @@ module.exports = {
     onlyShort: {
       type: 'boolean',
       defaultsTo: false,
+    },
+    workspaceId: {
+      type: 'string',
     },
   },
 };

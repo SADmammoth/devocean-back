@@ -9,6 +9,9 @@ module.exports = {
       description: 'Tag id or tag object',
       required: true,
     },
+    workspaceId: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -17,13 +20,13 @@ module.exports = {
     },
   },
 
-  fn: async function ({ tagInput }) {
+  fn: async function ({ tagInput, workspaceId }) {
     let tag;
 
     if (typeof tagInput === 'string') {
-      tag = await Tag.findOne({ id: tagInput });
+      tag = await Tag.findOne({ id: tagInput, workspaceId });
     } else if (tagInput.color && tagInput.name) {
-      tag = await Tag.create({ ...tagInput }).fetch();
+      tag = await Tag.create({ ...tagInput, workspaceId }).fetch();
     } else {
       return null;
     }

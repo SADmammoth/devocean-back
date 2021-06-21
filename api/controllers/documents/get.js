@@ -3,12 +3,21 @@ module.exports = {
 
   description: 'Get documents.',
 
-  inputs: {},
+  inputs: {
+    authorization: {
+      type: 'string',
+    },
+  },
 
   exits: {},
 
-  fn: async function () {
-    const documents = await Document.find().populate('contributors');
+  fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+    const documents = await Document.find({ workspaceId }).populate(
+      'contributors',
+    );
     return await Promise.all(
       documents.map(
         async (document) =>

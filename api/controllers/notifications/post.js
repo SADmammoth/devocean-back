@@ -24,13 +24,12 @@ module.exports = {
     );
 
     if (!teammateId) teammateId = login;
-
-    const notification = await Notification.create({
+    await sails.helpers.actions.postNotifications(
       title,
-      time: time ? new Date(time) : new Date(),
-      author: teammateId,
+      time,
+      teammateId,
       fullText,
-    }).fetch();
-    return notification;
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
   },
 };

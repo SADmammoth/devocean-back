@@ -5,10 +5,17 @@ module.exports = {
 
   description: 'Get collection of task folders and lists',
 
-  inputs: {},
+  inputs: {
+    authorization: {
+      type: 'string',
+    },
+  },
 
-  fn: async function () {
-    const lists = await TaskCollection.find()
+  fn: async function ({ authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(
+      authorization || this.req.headers.authorization.replace('Bearer ', ''),
+    );
+    const lists = await TaskCollection.find({ workspaceId })
       .populate('tasks')
       .populate('children')
       .populate('tag');

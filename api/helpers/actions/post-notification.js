@@ -16,16 +16,20 @@ module.exports = {
       meta: { swagger: { in: 'body' } },
     },
     fullText: { type: 'string', meta: { swagger: { in: 'body' } } },
+    authorization: { type: 'string' },
   },
 
   exits: {},
 
-  fn: async function ({ title, time, author, fullText }) {
+  fn: async function ({ title, time, author, fullText, authorization }) {
+    let { workspaceId } = await sails.helpers.requestUserData(authorization);
+
     const notification = await Notification.create({
       title,
       time: time ? new Date(time) : new Date(),
       author,
       fullText,
+      workspaceId,
     }).fetch();
     return notification;
   },

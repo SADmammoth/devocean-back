@@ -92,6 +92,7 @@ module.exports = {
     login,
     temporaryPassword,
     email,
+    authorization,
   }) {
     let teammate;
     const teammates = await Promise.all(
@@ -117,6 +118,10 @@ module.exports = {
           temporaryPassword: temporaryPassword || 'password',
           login: login || sails.helpers.faker.login(),
           email: email || 'lo.ma200018@gmail.com',
+          invited: true,
+          authorization:
+            authorization ||
+            this.req.headers.authorization.replace('Bearer ', ''),
         };
 
         return await sails.helpers.actions.postTeammate.with(teammate);
